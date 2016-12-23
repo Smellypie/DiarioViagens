@@ -1,1 +1,3 @@
 # DiarioViagens
+
+Planeamento vem aqui
