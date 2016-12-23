@@ -20,8 +20,8 @@ struct Viagem
 	int duracao;			//duração da viagem em dias
 	char *destinoP;			//destino da viagem(país)
 	char *destinoC;			//destino da viagem(cidade)
-	int meioT;				//meio de transporte(0 - carro, 1 - avião, ...)
-	int custo;				//custo total da viagem(euros)
+	int meioT;			//meio de transporte(0 - carro, 1 - avião, ...)
+	int custo;			//custo total da viagem(euros)
 	int kmPercorridos;		//quilómetros percorridos durante a viagem
 	struct Viagem *seg;
 };
