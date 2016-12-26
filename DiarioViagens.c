@@ -10,7 +10,7 @@ struct Data
 struct Ano
 {
 	int ano;
-	struct Viagem *lt;		//lista de viagens que ocorreram nesse ano
+	struct Viagem *viagens;		//lista de viagens que ocorreram nesse ano
 	struct Ano *seg;
 };
 
@@ -35,7 +35,7 @@ void criaCalendario()
 {
 	calendario = malloc(sizeof(struct Ano));
 	calendario -> ano = 0;
-	calendario -> lt = NULL;
+	calendario -> viagens = NULL;
 	calendario -> seg = NULL;
 }
 
@@ -99,11 +99,6 @@ void menu()
 
 int main()
 {
-	criaCalendario();
-	adicionaAno(2000);
-	adicionaAno(1999);
-	adicionaAno(2001);
-	printf("%d\n", calendario -> seg -> seg -> ano);
 	//leFicheiro();
 	//menu();
 	return 0;
