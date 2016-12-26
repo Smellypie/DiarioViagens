@@ -206,13 +206,6 @@ void menu()
 int main()
 {
 	criaCalendario();
-	//adicionaAno(2000);
-	adicionaAno(2001);
-	adicionaAno(2000);
-	adicionaViagem();
-	//printf("%d\n", calendario -> seg -> seg -> ano);
-	//leFicheiro();
-	//menu();
 	return 0;
 }
 
