@@ -167,6 +167,7 @@ void leFicheiro (){
 	struct Data auxD;
 	struct Ano *auxA;
 	struct Viagem *auxV;
+	auxV = malloc(sizeof(struct Viagem));
 	F1=fopen("ficheiro1.txt","r");
 	if(F1==NULL){printf("meter aqui o que acharmos melhor");}
 	else{
