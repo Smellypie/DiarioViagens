@@ -147,7 +147,7 @@ void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem cri
 			{
 				aux = aux -> seg;
 			}
-			if(aux -> seg = NULL)
+			if(aux -> seg == NULL)
 			{
 				aux -> seg = viagem;
 			}
