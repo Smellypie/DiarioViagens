@@ -138,7 +138,7 @@ void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem cri
 	}
 }
 
-void adicionaViagem()
+void adicionaViagem()									//cria uma viagem nova para inserir na lista
 {
 	int ano, dia, mes, duracao, meioT, custo, kmPercorridos;
 	char *destinoC, *destinoP;
