@@ -160,14 +160,46 @@ void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem cri
 	}
 }
 
-void adicionaViagem()									//cria uma viagem nova para inserir na lista
+void leFicheiro (){
+	FILE *F1;
+	int dia, mes, ano, duracao, meioT, kmPercorridos, custo;
+	char *destinoP, *destinoC;
+	struct Data auxD;
+	struct Ano *auxA;
+	struct Viagem *auxV;
+	F1=fopen("ficheiro1.txt","r");
+	if(F1==NULL){printf("meter aqui o que acharmos melhor");}
+	else{
+		while(fscanf(F1, "%d %d %d %s %s %d %d %d %d", &dia, &mes, &ano, destinoP, destinoC, &duracao, &meioT, &kmPercorridos, &custo) != EOF){  //para isto funcionar as strings nao podem ter espaços 
+			if(procuraAno(ano) == NULL){adicionaAno(ano);}
+			auxA = procuraAno(ano);
+			auxD.dia = dia;
+			auxD.mes = mes;
+			auxV -> diaIni = auxD;
+			auxV -> destinoC = destinoC;
+			auxV -> destinoP = destinoP;
+			auxV -> duracao = duracao;
+			auxV -> meioT = meioT;
+			auxV -> kmPercorridos = kmPercorridos;
+			auxV -> custo = custo;
+			auxV -> seg = NULL;
+			insereViagem(auxA, auxV);
+			}
+		}
+	fclose(F1);
+	}
+
+void adicionaViagem()
 {
+	FILE *F1;
 	int ano, dia, mes, duracao, meioT, custo, kmPercorridos;
 	char *destinoC, *destinoP;
 	struct Data auxD;
 	struct Ano *auxA;
 	struct Viagem *auxV;
 	auxV = malloc(sizeof(struct Viagem));
+	F1=fopen("ficheiro1.txt","a");										//acrecenta no fim do ficheiro
+	//fprintf(F1, "\n")													//nao sei se é preciso temos de testar
 	printf("Dia de inicio da viagem(dd mm aaaa): \n");
 	scanf("%d%d%d", &dia, &mes, &ano);
 	fflush(stdin);
@@ -190,6 +222,9 @@ void adicionaViagem()									//cria uma viagem nova para inserir na lista
 	scanf("%d", &custo);
 	fflush(stdin);
 	
+	fprintf(F1, "%d %d %d %s %s %d %d %d %d", dia, mes, ano, destinoP, destinoC, duracao, meioT, kmPercorridos, custo );
+	fclose(F1);
+	
 	if(procuraAno(ano) == NULL)
 	{
 		adicionaAno(ano);
@@ -207,6 +242,7 @@ void adicionaViagem()									//cria uma viagem nova para inserir na lista
 	auxV -> seg = NULL;
 	insereViagem(auxA, auxV);
 }
+
 
 void menu()
 {
