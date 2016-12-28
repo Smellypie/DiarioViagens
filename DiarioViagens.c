@@ -28,7 +28,6 @@ struct Viagem
 
 struct Ano *calendario;
 
-//leFicheiro
 
 void criaCalendario()													//Base da lista
 {
@@ -125,7 +124,7 @@ int vemAntes(struct Data d1, struct Data d2)							//Compara as datas e devolve 
 		}
 	}
 }
-
+//tem problema!! ainda nao vi onde
 void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem criada na lista de viagens ordenadas cronologicamente do respetivo ano
 {
 	struct Viagem *aux;
@@ -163,7 +162,7 @@ void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem cri
 void leFicheiro (){
 	FILE *F1;
 	int dia, mes, ano, duracao, meioT, kmPercorridos, custo;
-	char *destinoP, *destinoC;
+	char destinoP [20], destinoC[20];									// nao sei se pode ficar assim, dinamico?? dps tenho de mudar se nao for
 	struct Data auxD;
 	struct Ano *auxA;
 	struct Viagem *auxV;
@@ -171,12 +170,14 @@ void leFicheiro (){
 	F1=fopen("ficheiro1.txt","r");
 	if(F1==NULL){printf("meter aqui o que acharmos melhor");}
 	else{
-		while(fscanf(F1, "%d %d %d %s %s %d %d %d %d", &dia, &mes, &ano, destinoP, destinoC, &duracao, &meioT, &kmPercorridos, &custo) != EOF){  //para isto funcionar as strings nao podem ter espaços 
-			if(procuraAno(ano) == NULL){adicionaAno(ano);}
+		while(fscanf(F1, "%d %d %d %s %s %d %d %d %d\n", &dia, &mes, &ano, destinoP, destinoC, &duracao, &meioT, &kmPercorridos, &custo) != EOF){  //para isto funcionar as strings nao podem ter espaços 
+			printf("%d", dia);
+			if(procuraAno(ano) == NULL){adicionaAno(ano);}	//erro (se ficar so adiciona Ano funciona)
+			puts("sss");
 			auxA = procuraAno(ano);
 			auxD.dia = dia;
 			auxD.mes = mes;
-			auxV -> diaIni = auxD;
+			auxV -> diaIni = auxD; 					//unico que nao consegui testar para ja os restantes estao bem 
 			auxV -> destinoC = destinoC;
 			auxV -> destinoP = destinoP;
 			auxV -> duracao = duracao;
@@ -184,7 +185,7 @@ void leFicheiro (){
 			auxV -> kmPercorridos = kmPercorridos;
 			auxV -> custo = custo;
 			auxV -> seg = NULL;
-			insereViagem(auxA, auxV);
+			insereViagem(auxA, auxV);								//erro no insere Viagem
 			}
 		}
 	fclose(F1);
@@ -199,16 +200,16 @@ void adicionaViagem()
 	struct Ano *auxA;
 	struct Viagem *auxV;
 	auxV = malloc(sizeof(struct Viagem));
-	F1=fopen("ficheiro1.txt","a");										//acrecenta no fim do ficheiro
+	F1=fopen("ficheiro1.txt","a");										//acrecenta no fim do ficheiro a ou w+ ?
 	//fprintf(F1, "\n")													//nao sei se é preciso temos de testar
 	printf("Dia de inicio da viagem(dd mm aaaa): \n");
 	scanf("%d%d%d", &dia, &mes, &ano);
 	fflush(stdin);
 	printf("Destino da viagem\nPais: ");
-	scanf("%s", &destinoP);
+	scanf("%s", &destinoP);				//??
 	fflush(stdin);
 	printf("Cidade: ");
-	scanf("%s", &destinoC);
+	scanf("%s", &destinoC);				//??
 	fflush(stdin);
 	printf("Duracao da viagem(em dias): \n");
 	scanf("%d", &duracao);
@@ -226,11 +227,11 @@ void adicionaViagem()
 	fprintf(F1, "%d %d %d %s %s %d %d %d %d", dia, mes, ano, destinoP, destinoC, duracao, meioT, kmPercorridos, custo );
 	fclose(F1);
 	
-	if(procuraAno(ano) == NULL)
+	if(procuraAno(ano) == NULL)   //problema na procuraAno
 	{
 		adicionaAno(ano);
 	}
-	auxA = procuraAno(ano);
+	auxA = procuraAno(ano);			///problema na procuraAno
 	auxD.dia = dia;
 	auxD.mes = mes;
 	auxV -> diaIni = auxD;
@@ -241,7 +242,7 @@ void adicionaViagem()
 	auxV -> kmPercorridos = kmPercorridos;
 	auxV -> custo = custo;
 	auxV -> seg = NULL;
-	insereViagem(auxA, auxV);
+	insereViagem(auxA, auxV);     //problema na funçao
 }
 
 
@@ -265,6 +266,8 @@ void menu()
 int main()
 {
 	criaCalendario();
+	leFicheiro();
 	return 0;
 }
+
 
