@@ -37,7 +37,7 @@ void criaCalendario()													//Base da lista
 	calendario -> seg = NULL;
 }
 
-void adicionaAno(int ano)												//Cria a struct de um novo ano (dá erro)
+void adicionaAno(int ano)												//Cria a struct de um novo ano
 {
 	struct Ano novo, *aux;
 	if(calendario -> seg == NULL)
