@@ -39,44 +39,33 @@ void criaCalendario()													//Base da lista
 
 void adicionaAno(int ano)												//Cria a struct de um novo ano (dá erro)
 {
-	struct Ano *aux, *aux2;
-	aux = malloc(sizeof(struct Ano));
+	struct Ano novo, *aux;
 	if(calendario -> seg == NULL)
 	{
-		aux -> ano = ano;
-		aux -> seg = NULL;
-		calendario -> seg = aux;
+		novo.ano = ano;
+		novo.seg = NULL;
+		calendario -> seg = &novo;
 	}
 	else
 	{
-		if(calendario -> seg -> ano > ano)
+		aux = calendario;
+		while(aux -> seg != NULL && aux -> seg -> ano < ano)
 		{
-			aux -> ano = ano;
-			aux -> viagens = NULL;
-			aux -> seg = calendario -> seg;
-			calendario -> seg = aux;
+			aux = aux -> seg;
+		}
+		if(aux -> seg == NULL)
+		{
+			novo.ano = ano;
+			novo.viagens = NULL;
+			novo.seg = NULL;
+			aux -> seg = &novo;
 		}
 		else
 		{
-			aux = calendario -> seg;
-			while(aux -> ano < ano && aux != NULL)
-			{
-				aux2 = aux;
-				aux = aux -> seg;
-			}
-			if(aux == NULL)
-			{
-				aux -> ano = ano;
-				aux -> viagens = NULL;
-				aux -> seg = NULL;
-			}
-			else
-			{
-				aux -> ano = ano;
-				aux -> viagens = NULL;
-				aux -> seg = aux2 -> seg;
-				aux2 -> seg = aux;
-			}
+			novo.ano = ano;
+			novo.viagens = NULL;
+			novo.seg = aux -> seg;
+			aux -> seg = &novo;
 		}
 	}
 }
