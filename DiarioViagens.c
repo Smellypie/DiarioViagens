@@ -113,36 +113,37 @@ int vemAntes(struct Data d1, struct Data d2)							//Compara as datas e devolve 
 		}
 	}
 }
-//tem problema!! ainda nao vi onde
+
 void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem criada na lista de viagens ordenadas cronologicamente do respetivo ano
 {
-	struct Viagem *aux;
+	struct Viagem *act, *ant;
 	if(ano -> viagens == NULL)
 	{
 		ano -> viagens = viagem;
 	}
 	else
 	{
-		if(vemAntes(viagem -> diaIni, ano -> viagens -> diaIni))
+		if(!vemAntes(ano->viagens->diaIni, viagem->diaIni))
 		{
-			viagem -> seg = ano -> viagens;
-			ano -> viagens = viagem;
+			viagem->seg = ano->viagens;
+			ano->viagens = viagem;
 		}
 		else
 		{
-			aux = ano -> viagens;
-			while(aux -> seg != NULL && vemAntes(aux -> seg -> diaIni, aux -> diaIni))
+			act = ano -> viagens;
+			while(vemAntes(act -> diaIni, viagem -> diaIni) && act -> seg != NULL)	//as duas condições podem ser contrariados ao mesmo tempo
 			{
-				aux = aux -> seg;
+				ant = act;
+				act = act -> seg;
 			}
-			if(aux -> seg == NULL)
+			if(!vemAntes(act -> diaIni, viagem -> diaIni))				//nesse caso considera-se esta hipótese primeiro
 			{
-				aux -> seg = viagem;
+				viagem -> seg = act;
+				ant->seg = viagem;
 			}
 			else
 			{
-				viagem -> seg = aux -> seg;
-				aux -> seg = viagem;
+				act -> seg = viagem;
 			}
 		}
 	}
