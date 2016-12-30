@@ -10,28 +10,28 @@ struct Data
 struct Ano
 {
 	int ano;
-	int despesa = 0;													//despesa total nesse ano
-	int nDestinos = 0;													//número de cidades/países visitados no total nesse ano
-	int kmAviao = 0;													//distância percorrida de avião durante esse ano
-	int kmCarro = 0;													//distância percorrida de carro durante esse ano
-	int diasViagem = 0;													//número total de dias de viagem nesse ano
-	struct Viagem *viagens;													//lista de viagens que ocorreram nesse ano
+	int despesa = 0;											//despesa total nesse ano
+	int nDestinos = 0;											//número de cidades/países visitados no total nesse ano
+	int kmAviao = 0;											//distância percorrida de avião durante esse ano
+	int kmCarro = 0;											//distância percorrida de carro durante esse ano
+	int diasViagem = 0;											//número total de dias de viagem nesse ano
+	struct Viagem *viagens;											//lista de viagens que ocorreram nesse ano
 	struct Ano *seg;
 };
 
 struct Viagem
 {
-	struct Data diaIni;													//dia do início da viagem(dia mes)
-	int duracao;														//duração da viagem em dias
-	char *destinoP;														//destino da viagem(país)
-	char *destinoC;														//destino da viagem(cidade)
+	struct Data diaIni;											//dia do início da viagem(dia mes)
+	int duracao;												//duração da viagem em dias
+	char *destinoP;												//destino da viagem(país)
+	char *destinoC;												//destino da viagem(cidade)
 	int meioT;															//meio de transporte(0 - carro, 1 - avião, ...)
 	int custo;															//custo total da viagem(euros)
-	int kmPercorridos;													//quilómetros percorridos durante a viagem
+	int kmPercorridos;											//quilómetros percorridos durante a viagem
 	struct Viagem *seg;
 };
 
-struct Ano *calendario;
+struct Ano *calendario;					//os dados desta struct são os totais
 
 
 void criaCalendario()														//Base da lista
@@ -42,7 +42,34 @@ void criaCalendario()														//Base da lista
 	calendario -> seg = NULL;
 }
 
-void adicionaAno(int ano)													//Cria a struct de um novo ano
+void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os valores dos custos ... totais e por ano
+{
+	ano->despesa += viagem->custo;
+	//ano->nDestinos += viagem->
+	if(viagem->meioT == 1)
+	{
+		ano->kmAviao += viagem->kmPercorridos;
+	}
+	if(viagem->meioT == 2)
+	{
+		ano->kmCarro += viagem->kmPercorridos;
+	}
+	ano->diasViagem += viagem->duracao;
+	
+	calendario->despesa += viagem->custo;
+	//ano->nDestinos += viagem->
+	if(viagem->meioT == 1)
+	{
+		calendario->kmAviao += viagem->kmPercorridos;
+	}
+	if(viagem->meioT == 2)
+	{
+		calendario->kmCarro += viagem->kmPercorridos;
+	}
+	calendario->diasViagem += viagem->duracao;
+}
+
+void adicionaAno(int ano)											//Cria a struct de um novo ano
 {
 	struct Ano novo, *aux;
 	if(calendario -> seg == NULL)
@@ -75,7 +102,7 @@ void adicionaAno(int ano)													//Cria a struct de um novo ano
 	}
 }
 
-struct Ano *procuraAno(int ano)													//verifica se determinado ano já está criado
+struct Ano *procuraAno(int ano)											//verifica se determinado ano já está criado
 {
 	struct Ano *aux;
 	aux = calendario;
@@ -93,7 +120,7 @@ struct Ano *procuraAno(int ano)													//verifica se determinado ano já es
 	}
 }
 
-int vemAntes(struct Data d1, struct Data d2)											//Compara as datas e devolve verdadeiro se a primeira data vem antes
+int vemAntes(struct Data d1, struct Data d2)									//Compara as datas e devolve verdadeiro se a primeira data vem antes
 {
 	if(d1.mes < d2.mes)
 	{
@@ -119,7 +146,7 @@ int vemAntes(struct Data d1, struct Data d2)											//Compara as datas e devo
 	}
 }
 
-void insereViagem(struct Ano *ano, struct Viagem *viagem)									//Insere viagem criada na lista de viagens ordenadas cronologicamente do respetivo ano
+void insereViagem(struct Ano *ano, struct Viagem *viagem)							//Insere viagem criada na lista de viagens ordenadas cronologicamente do respetivo ano
 {
 	struct Viagem *act, *ant;
 	if(ano -> viagens == NULL)
@@ -163,9 +190,14 @@ void leFicheiro (){
 	struct Viagem *auxV;
 	auxV = malloc(sizeof(struct Viagem));
 	F1=fopen("ficheiro1.txt","r");
-	if(F1==NULL){printf("meter aqui o que acharmos melhor");}
-	else{
-		while(fscanf(F1, "%d %d %d %s %s %d %d %d %d\n", &dia, &mes, &ano, destinoP, destinoC, &duracao, &meioT, &kmPercorridos, &custo) != EOF){  //para isto funcionar as strings nao podem ter espaços 
+	if(F1==NULL)
+	{
+		printf("meter aqui o que acharmos melhor");
+	}
+	else
+	{
+		while(fscanf(F1, "%d %d %d %s %s %d %d %d %d\n", &dia, &mes, &ano, destinoP, destinoC, &duracao, &meioT, &kmPercorridos, &custo) != EOF)  //para isto funcionar as strings nao podem ter espaços
+		{
 			printf("%d", dia);
 			if(procuraAno(ano) == NULL){adicionaAno(ano);}	//erro (se ficar so adiciona Ano funciona)
 			puts("sss");	//??
@@ -180,11 +212,12 @@ void leFicheiro (){
 			auxV -> kmPercorridos = kmPercorridos;
 			auxV -> custo = custo;
 			auxV -> seg = NULL;
+			actualizaDados(auxA, auxV);
 			insereViagem(auxA, auxV);								//erro no insere Viagem
-			}
 		}
-	fclose(F1);
 	}
+	fclose(F1);
+}
 
 void adicionaViagem()
 {
@@ -196,7 +229,7 @@ void adicionaViagem()
 	struct Viagem *auxV;
 	auxV = malloc(sizeof(struct Viagem));
 	F1=fopen("ficheiro1.txt","a");										//acrecenta no fim do ficheiro a ou w+ ?
-	//fprintf(F1, "\n")													//nao sei se é preciso temos de testar
+	//fprintf(F1, "\n")											//nao sei se é preciso temos de testar
 	printf("Dia de inicio da viagem(dd mm aaaa): \n");
 	scanf("%d%d%d", &dia, &mes, &ano);
 	fflush(stdin);
@@ -222,11 +255,11 @@ void adicionaViagem()
 	fprintf(F1, "%d %d %d %s %s %d %d %d %d", dia, mes, ano, destinoP, destinoC, duracao, meioT, kmPercorridos, custo );
 	fclose(F1);
 	
-	if(procuraAno(ano) == NULL)   //problema na procuraAno
+	if(procuraAno(ano) == NULL)
 	{
 		adicionaAno(ano);
 	}
-	auxA = procuraAno(ano);			///problema na procuraAno
+	auxA = procuraAno(ano);	
 	auxD.dia = dia;
 	auxD.mes = mes;
 	auxV -> diaIni = auxD;
@@ -237,7 +270,7 @@ void adicionaViagem()
 	auxV -> kmPercorridos = kmPercorridos;
 	auxV -> custo = custo;
 	auxV -> seg = NULL;
-	insereViagem(auxA, auxV);     //problema na funçao
+	insereViagem(auxA, auxV);
 }
 
 
