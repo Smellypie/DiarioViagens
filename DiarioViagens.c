@@ -10,7 +10,12 @@ struct Data
 struct Ano
 {
 	int ano;
-	struct Viagem *viagens;												//lista de viagens que ocorreram nesse ano
+	int despesa = 0;													//despesa total nesse ano
+	int nDestinos = 0;													//número de cidades/países visitados no total nesse ano
+	int kmAviao = 0;													//distância percorrida de avião durante esse ano
+	int kmCarro = 0;													//distância percorrida de carro durante esse ano
+	int diasViagem = 0;													//número total de dias de viagem nesse ano
+	struct Viagem *viagens;													//lista de viagens que ocorreram nesse ano
 	struct Ano *seg;
 };
 
@@ -29,7 +34,7 @@ struct Viagem
 struct Ano *calendario;
 
 
-void criaCalendario()													//Base da lista
+void criaCalendario()														//Base da lista
 {
 	calendario = malloc(sizeof(struct Ano));
 	calendario -> ano = 0;
@@ -37,7 +42,7 @@ void criaCalendario()													//Base da lista
 	calendario -> seg = NULL;
 }
 
-void adicionaAno(int ano)												//Cria a struct de um novo ano
+void adicionaAno(int ano)													//Cria a struct de um novo ano
 {
 	struct Ano novo, *aux;
 	if(calendario -> seg == NULL)
@@ -70,7 +75,7 @@ void adicionaAno(int ano)												//Cria a struct de um novo ano
 	}
 }
 
-struct Ano *procuraAno(int ano)											//verifica se determinado ano já está criado
+struct Ano *procuraAno(int ano)													//verifica se determinado ano já está criado
 {
 	struct Ano *aux;
 	aux = calendario;
@@ -88,7 +93,7 @@ struct Ano *procuraAno(int ano)											//verifica se determinado ano já est�
 	}
 }
 
-int vemAntes(struct Data d1, struct Data d2)							//Compara as datas e devolve verdadeiro se a primeira data vem antes
+int vemAntes(struct Data d1, struct Data d2)											//Compara as datas e devolve verdadeiro se a primeira data vem antes
 {
 	if(d1.mes < d2.mes)
 	{
@@ -114,7 +119,7 @@ int vemAntes(struct Data d1, struct Data d2)							//Compara as datas e devolve 
 	}
 }
 
-void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem criada na lista de viagens ordenadas cronologicamente do respetivo ano
+void insereViagem(struct Ano *ano, struct Viagem *viagem)									//Insere viagem criada na lista de viagens ordenadas cronologicamente do respetivo ano
 {
 	struct Viagem *act, *ant;
 	if(ano -> viagens == NULL)
@@ -152,7 +157,7 @@ void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem cri
 void leFicheiro (){
 	FILE *F1;
 	int dia, mes, ano, duracao, meioT, kmPercorridos, custo;
-	char destinoP [20], destinoC[20];									// nao sei se pode ficar assim, dinamico?? dps tenho de mudar se nao for
+	char destinoP [20], destinoC[20];	// nao sei se pode ficar assim, dinamico?? dps tenho de mudar se nao for
 	struct Data auxD;
 	struct Ano *auxA;
 	struct Viagem *auxV;
@@ -163,7 +168,7 @@ void leFicheiro (){
 		while(fscanf(F1, "%d %d %d %s %s %d %d %d %d\n", &dia, &mes, &ano, destinoP, destinoC, &duracao, &meioT, &kmPercorridos, &custo) != EOF){  //para isto funcionar as strings nao podem ter espaços 
 			printf("%d", dia);
 			if(procuraAno(ano) == NULL){adicionaAno(ano);}	//erro (se ficar so adiciona Ano funciona)
-			puts("sss");
+			puts("sss");	//??
 			auxA = procuraAno(ano);
 			auxD.dia = dia;
 			auxD.mes = mes;
