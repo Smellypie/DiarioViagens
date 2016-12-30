@@ -42,6 +42,20 @@ void criaCalendario()														//Base da lista
 	calendario -> seg = NULL;
 }
 
+char *ajustaMemoria(char *str, int len)									//cria uma nova string com apenas a memória necessária para str
+{
+	char *novo;
+	int i;
+	novo = malloc((len + 1) * sizeof(char));
+	for(i = 0; i < len; i++)
+	{
+		*(novo + i) = *(str + i);
+	}
+	*(novo + len + 1) = '\0';
+	free(str);
+	return novo;
+}
+
 void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os valores dos custos ... totais e por ano
 {
 	ano->despesa += viagem->custo;
