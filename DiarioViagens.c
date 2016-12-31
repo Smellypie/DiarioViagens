@@ -287,12 +287,11 @@ void criaViagem()
 		scanf("%s", cidade);
 		fflush(stdin);
 		fprintf(F1, ";%s", cidade);
-		//insereCidade(auxV, cidade);	tem erro
 	}
 	
 	fclose(F1);
 	
-	if(procuraAno(ano) == NULL)
+	if(procuraAno(ano) == NULL)	//o erro esta aqui	
 	{
 		adicionaAno(ano);
 	}
@@ -306,11 +305,8 @@ void criaViagem()
 	auxV -> kmPercorridos = kmPercorridos;
 	auxV -> custo = custo;
 	auxV -> seg = NULL;
-	printf("s");
 	actualizaDados(auxA, auxV);
-	printf("s");
 	insereViagem(auxA, auxV);
-	printf("s");
 	
 }
 
