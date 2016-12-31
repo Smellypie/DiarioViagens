@@ -356,24 +356,29 @@ void leFicheiro()
 }
 
 void consultaInformacao(){
-	int i;
 	printf("		Países e cidades visitadas \n");
 	printf("Países:\n");
 	printf("Total de países:\n");
-	//por ano
+	printf("Total de países por ano:\n");
 	printf("Cidades:\n");
 	printf("Total de cidades: %d\n", );
-	//por ano
+	printf("Total de cidades por ano: %d\n", );
+	
 	printf("		Número de quilómetros percorridos:\n");
 	printf("Total de quilómetros percorridos:\n");
-	//por ano
+	printf("Total de quilómetros percorridos:\n");
 	printf("Total de quilómetros percorridos de Aviao:\n");
 	printf("Total de quilómetros percorridos de Carro:\n");
+	
 	printf("		Despesas:");
 	printf("Total de despesas:\n");
-	for(i = 1; i <= ??; i++){
-		printf("Despesa viagem %d: %d\n", i, ??);
-		}
+	printf("Despesa viagem %d: %d\n", i, ??);
+	
+		
+	printf("		Dias de viagem:");
+	printf("Total de dias de viagem:\n");
+	printf("Dias de viagem por viagem:\n");
+	printf("Dias de viagem por ano:\n");
 	}
 
 
