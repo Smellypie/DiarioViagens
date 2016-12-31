@@ -306,8 +306,11 @@ void criaViagem()
 	auxV -> kmPercorridos = kmPercorridos;
 	auxV -> custo = custo;
 	auxV -> seg = NULL;
+	printf("s");
 	actualizaDados(auxA, auxV);
+	printf("s");
 	insereViagem(auxA, auxV);
+	printf("s");
 	
 }
 
@@ -355,27 +358,71 @@ void leFicheiro()
 	}
 }
 
+void criaRelatorio(){
+	char *data;
+	char *ficheiro;
+	FILE *fp;
+	printf("Introduza a data atual (dd mm aaaa): \n");
+	scanf("%s", data);
+	
+	sprintf(ficheiro,"Relatorio%s.txt",data);
+
+	fp=fopen(ficheiro,"w");
+ 
+	
+	}
+
 void menu()
 {
-	int o;
-	printf("\tDiario de Viagens\n1 - Adiciona Viagem\n2 - ...\n");
-	scanf("%d", &o);
-	switch(o)
-	{
-		case 1:
-		//adicionaViagem();
-		break;
-		case 2:
-		//...
-		default:
-		printf("Parametro invalido...");
+	int o, s = 1;
+	leFicheiro();
+	while(s){
+		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
+		printf("||												||\n");
+		printf("||				Diario de Viagens				||\n");
+		printf("||												||\n");
+		printf("||		1 - Adiciona Viagem						||\n");
+		printf("||		2 - ...									||\n");
+		printf("||		3 - ...									||\n");
+		printf("||		4 - Criar relatorio						||\n");
+		printf("||		5 - Sair								||\n");
+		printf("||												||\n");
+		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
+		scanf("%d", &o);
+		switch(o)
+		{
+			case 1:
+			criaViagem();
+			fflush(stdin);
+			printf("Clique ENTER para continuar...");
+			getchar();
+			fflush(stdin);
+			break;
+			
+			case 2:
+			//...
+			break;
+			
+			case 3:
+			//...
+			break;
+			
+			case 4:
+			//...
+			break;
+			
+			case 5:
+			s = 0;
+			break;
+			default:
+			printf("Parametro invalido...");
+		}
 	}
 }
 
 int main()
 {
-	criaCalendario();
-	leFicheiro();
+	criaRelatorio();
 	return 0;
 }
 
