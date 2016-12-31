@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
+#include <assert.h>
 
 struct Cidade
 {
@@ -354,7 +355,62 @@ void leFicheiro()
 	}
 }
 
-void criaRelatorio(){
+void consultaInformacao(){
+	int i;
+	printf("		Países e cidades visitadas \n");
+	printf("Países:\n");
+	printf("Total de países:\n");
+	//por ano
+	printf("Cidades:\n");
+	printf("Total de cidades: %d\n", );
+	//por ano
+	printf("		Número de quilómetros percorridos:\n");
+	printf("Total de quilómetros percorridos:\n");
+	//por ano
+	printf("Total de quilómetros percorridos de Aviao:\n");
+	printf("Total de quilómetros percorridos de Carro:\n");
+	printf("		Despesas:");
+	printf("Total de despesas:\n");
+	for(i = 1; i <= ??; i++){
+		printf("Despesa viagem %d: %d\n", i, ??);
+		}
+	}
+
+
+int percentagem(int a, int b){
+	int res;
+	if(a == 0 && b == 0){
+		return -1;
+		}
+	else{
+		assert(a > 0);
+		assert(b > 0);
+		assert(a > b);
+		res = (a*100)/b;
+		return res;
+		}	
+	}
+
+void consultaPercentagens(){
+	printf("");
+	printf("");
+	printf("");
+	printf("");
+	printf("");
+	
+	
+	
+	
+	}
+
+void criaRelatorioe(){ //atençao a ordem alfabetica
+	
+	
+	
+	}
+
+
+void criaRelatoriof(){ //atençao a ordem alfabetica
 	char *data;
 	char *ficheiro;
 	FILE *fp;
@@ -368,6 +424,7 @@ void criaRelatorio(){
 	
 	}
 
+
 void menu()
 {
 	int o, s = 1;
@@ -377,48 +434,59 @@ void menu()
 		printf("||												||\n");
 		printf("||				Diario de Viagens				||\n");
 		printf("||												||\n");
-		printf("||		1 - Adiciona Viagem						||\n");
-		printf("||		2 - ...									||\n");
-		printf("||		3 - ...									||\n");
-		printf("||		4 - Criar relatorio						||\n");
-		printf("||		5 - Sair								||\n");
+		printf("||		1 - Adiciona viagem						||\n");
+		printf("||		2 - Consultar informacao				||\n");
+		printf("||		3 - Consultar informação percentual		||\n");
+		printf("||		4 - Criar relatorio	(ecra)				||\n"); // dos países onde visitou mais cidades e onde gastou mais dinheiro
+		printf("||		5 - Criar relatorio	(ficheiro)			||\n");
+		printf("||		6 - Sair								||\n");
 		printf("||												||\n");
 		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
 		scanf("%d", &o);
-		switch(o)
-		{
-			case 1:
-			criaViagem();
-			fflush(stdin);
-			printf("Clique ENTER para continuar...");
-			getchar();
-			fflush(stdin);
-			break;
+		if(s != 0){
+			switch(o)
+			{
+				case 1:
+				criaViagem();
+				fflush(stdin);
+				printf("Clique ENTER para continuar...");
+				getchar();
+				fflush(stdin);
+				break;
+				
+				case 2:
+				consultaInformacao();
+				break;
+				
+				case 3:
+				consultaPercentagens();
+				break;
+				
+				case 4:
+				criaRelatorioe();
+				break;
+				
+				case 5:
+				criaRelatoriof();
+				break;
+				
+				case 6:
+				s = 0;
+				
+				break;
+				
+				default:
+				printf("Parametro invalido...");
+			}
 			
-			case 2:
-			//...
-			break;
 			
-			case 3:
-			//...
-			break;
-			
-			case 4:
-			//...
-			break;
-			
-			case 5:
-			s = 0;
-			break;
-			default:
-			printf("Parametro invalido...");
-		}
+			}
 	}
 }
 
 int main()
 {
-	criaRelatorio();
+	menu();
 	return 0;
 }
 
