@@ -401,12 +401,51 @@ void imprimeCidades(){
 		}
 	}
 
+void imprimePaises(){
+	int jaexiste;
+	struct Ano *auxA;
+	struct Viagem *auxV;
+
+	struct Cidade *todas;
+	struct Cidade *todasaux1;
+	struct Cidade *todasaux2;
+	struct Cidade *todasprox;
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+	auxC = malloc(sizeof(struct Cidade));
+	todas = malloc(sizeof(struct Cidade));
+	todasaux1 = malloc(sizeof(struct Cidade));
+	todasaux2 = malloc(sizeof(struct Cidade));
+	todasaux1 = todas;
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem	
+			for(todasaux2 = todas; todasaux2 != NULL; todasaux2 = todasaux2 -> seg){	//ver se o pais ja foi guardada no 'todas'
+				if(strcmp(todasaux2 -> cidade, auxV -> destinoP) == 0){jaexiste = 1;}}	//verifica se ja existe
+			if(jaexiste != 1){															//se o pais nao existe
+				strcpy(todasaux1 -> cidade, auxV -> destinoP);
+				todasprox = criaCidade();												//criar o proximo sitio para guardar o pais
+				todasaux1 -> seg = todasprox;											//juntar à lista todas
+				todasaux1 = todasaux1 -> seg;											//avanço do auxiliar
+				jaexiste = 0;
+				}
+			}
+			
+		}
+		
+	for(todasaux1 = todas; todasaux1 != NULL; todasaux1 = todasaux1 -> seg){				//pais a pais
+		printf("%s\n", todasaux1 -> cidade);			//falta por por ordem alfabetica
+		}
+	}
+
 void consultaInformacao(){
+	int i;
 	printf("		Países e cidades visitadas \n");
 	printf("Países:\n");
-	printf("Total de países:\n");
+	imprimePaises();
+	printf("Total de países: %d\n", );
 	printf("Total de países por ano:\n");
 	printf("Cidades:\n");
+	imprimeCidades();
 	printf("Total de cidades: %d\n", );
 	printf("Total de cidades por ano: %d\n", );
 	
@@ -426,6 +465,7 @@ void consultaInformacao(){
 	printf("Dias de viagem por viagem:\n");
 	printf("Dias de viagem por ano:\n");
 	}
+
 
 
 int percentagem(int a, int b){
