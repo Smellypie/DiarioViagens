@@ -101,12 +101,20 @@ void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os va
 
 void adicionaAno(int ano)												//Cria a struct de um novo ano
 {
-	struct Ano novo, *aux;	
+	struct Ano *novo, *aux;
+	novo = malloc(sizeof(struct Ano));
+	novo->despesa = 0;
+	novo->nViagens = 0;
+	novo->nDestinos = 0;
+	novo->kmAviao = 0;
+	novo->kmCarro = 0;
+	novo->diasViagem = 0;
+	novo->ano = ano;
+	novo->seg = NULL;
+	novo->viagens = NULL;
 	if(calendario -> seg == NULL)
 	{
-		novo.ano = ano;
-		novo.seg = NULL;
-		calendario -> seg = &novo;
+		calendario -> seg = novo;
 	}
 	else
 	{
@@ -117,17 +125,12 @@ void adicionaAno(int ano)												//Cria a struct de um novo ano
 		}
 		if(aux -> seg == NULL)
 		{
-			novo.ano = ano;
-			novo.viagens = NULL;
-			novo.seg = NULL;
-			aux -> seg = &novo;
+			aux -> seg = novo;
 		}
 		else
 		{
-			novo.ano = ano;
-			novo.viagens = NULL;
-			novo.seg = aux -> seg;
-			aux -> seg = &novo;
+			novo->seg = aux -> seg;
+			aux -> seg = novo;
 		}
 	}
 }
@@ -176,13 +179,23 @@ int vemAntes(struct Data d1, struct Data d2)							//Compara as datas e devolve 
 	}
 }
 
-void insereCidade(struct Viagem *viagem, char *c)	//tem erro
+void insereCidade(struct Viagem *viagem, char *c)
 {
 	struct Cidade *cidade, *aux;
+	char *novo;
+	if(c != NULL)
+	{
+		novo = malloc(strlen(c)*sizeof(char));
+		memcpy(novo, c, strlen(c));
+	}
+	else
+	{
+		novo = NULL;
+	}
 	cidade = malloc(sizeof(struct Cidade));
 	if(viagem->cidades == NULL)
 	{
-		cidade->cidade = c;
+		cidade->cidade = novo;
 		cidade->seg = NULL;
 		viagem->cidades = cidade;
 	}
@@ -193,7 +206,7 @@ void insereCidade(struct Viagem *viagem, char *c)	//tem erro
 		{
 			aux = aux->seg;
 		}
-		cidade->cidade = c;
+		cidade->cidade = novo;
 		cidade->seg = NULL;
 		aux->seg = cidade;
 	}
@@ -295,7 +308,7 @@ void criaViagem()
 	
 	fclose(F1);
 	
-	if(procuraAno(ano) == NULL)	//o erro esta aqui	
+	if(procuraAno(ano) == NULL)	
 	{
 		adicionaAno(ano);
 	}
@@ -322,9 +335,8 @@ void leFicheiro()
 	struct Cidade *auxC;
 	struct Data auxD;
 	struct Ano *auxA;
-	struct Viagem *auxV;
+	struct Viagem auxV;
 	
-	auxV = malloc(sizeof(struct Viagem));
 	auxA = malloc(sizeof(struct Ano));
 	destinoP = malloc(50 * sizeof(char));
 	info = malloc(50 * sizeof(char));
@@ -348,7 +360,6 @@ void leFicheiro()
 		*(info + i) = '\0';
 		dia = atoi(info);
 		auxD.dia = dia;
-		printf("%s\n", info);
 		
 		i = 0;
 		c = fgetc(F1);
@@ -361,8 +372,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		mes = atoi(info);
 		auxD.mes = mes;
-		auxV -> diaIni = auxD;
-		printf("%s\n", info);
+		auxV.diaIni = auxD;
 		
 		i = 0;
 		c = fgetc(F1);
@@ -379,7 +389,6 @@ void leFicheiro()
 			adicionaAno(ano);
 		}
 		auxA = procuraAno(ano);
-		printf("%s\n", info);
 		
 		i = 0;
 		c = fgetc(F1);
@@ -391,8 +400,7 @@ void leFicheiro()
 		}
 		*(info + i) = '\0';
 		duracao = atoi(info);
-		auxV -> duracao = duracao;
-		printf("%s\n", info);
+		auxV.duracao = duracao;
 		
 		i = 0;
 		c = fgetc(F1);
@@ -404,8 +412,7 @@ void leFicheiro()
 		}
 		*(info + i) = '\0';
 		meioT = atoi(info);
-		auxV -> meioT = meioT;
-		printf("%s\n", info);
+		auxV.meioT = meioT;
 		
 		i = 0;
 		c = fgetc(F1);
@@ -417,8 +424,7 @@ void leFicheiro()
 		}
 		*(info + i) = '\0';
 		kmPercorridos = atoi(info);
-		auxV -> kmPercorridos = kmPercorridos;
-		printf("%s\n", info);
+		auxV.kmPercorridos = kmPercorridos;
 		
 		i = 0;
 		c = fgetc(F1);
@@ -430,8 +436,7 @@ void leFicheiro()
 		}
 		*(info + i) = '\0';
 		custo = atoi(info);
-		auxV -> custo = custo;
-		printf("%s\n", info);
+		auxV.custo = custo;
 		
 		i = 0;
 		c = fgetc(F1);
@@ -444,8 +449,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		memmove(destinoP, info, strlen(info) + 1);
 		destinoP = ajustaMemoria(destinoP, strlen(destinoP));
-		auxV -> destinoP = destinoP;
-		printf("%s\n", destinoP);
+		auxV.destinoP = destinoP;
 		
 		i = 0;
 		c = fgetc(F1);
@@ -457,11 +461,10 @@ void leFicheiro()
 		}
 		*(info + i) = '\0';
 		nCidades = atoi(info);
-		auxV -> nCidades = nCidades;
-		printf("%s\n", info);
+		auxV.nCidades = nCidades;
 		
-		auxV->cidades = NULL;		
-		insereCidade(auxV, NULL);
+		auxV.cidades = NULL;		
+		insereCidade(&auxV, NULL);
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';' && c != EOF && c != '\n')
@@ -471,13 +474,14 @@ void leFicheiro()
 			i++;
 		}
 		*(info + i) = '\0';
-		auxV->cidades->cidade = malloc(strlen(info) * sizeof(char));
-		memmove(auxV->cidades->cidade, info, strlen(info));
-		printf("%s\n", info);
-		/*Por consertar
-		while(c != EOF)
+		auxV.cidades->cidade = malloc(strlen(info) * sizeof(char));
+		memmove(auxV.cidades->cidade, info, strlen(info));
+		
+		auxC = auxV.cidades;
+		while(c != EOF && c != '\n')
 		{
-			insereCidade(auxV, NULL);
+			insereCidade(&auxV, NULL);
+			auxC = auxC->seg;
 			i = 0;
 			c = fgetc(F1);
 			while(c != ';' && c != EOF && c != '\n')
@@ -487,13 +491,13 @@ void leFicheiro()
 				i++;
 			}
 			*(info + i) = '\0';
-			auxV->cidades->cidade = malloc(strlen(info) * sizeof(char));
-			memmove(auxV->cidades->cidade, info, strlen(info));
+			auxC->cidade = malloc(strlen(info) * sizeof(char));
+			memmove(auxC->cidade, info, strlen(info));
 		}
-		*/
-		auxV->seg = NULL;
+		
+		auxV.seg = NULL;
 		auxA->viagens = NULL;
-		insereViagem(auxA, auxV);
+		insereViagem(auxA, &auxV);
 		fclose(F1);
 	}
 }
