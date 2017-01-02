@@ -84,7 +84,7 @@ void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os va
 		ano->kmCarro += viagem->kmPercorridos;
 	}
 	ano->diasViagem += viagem->duracao;
-	
+
 	calendario->despesa += viagem->custo;
 	calendario->nViagens++;
 	calendario->nDestinos += viagem->nCidades;
@@ -254,50 +254,50 @@ void criaViagem()
 	struct Data auxD;
 	struct Ano *auxA;
 	struct Viagem *auxV;
-	
+
 	auxV = malloc(sizeof(struct Viagem));
 	destinoP = malloc(50*sizeof(char));
 	cidade = malloc(50*sizeof(char));
-	
+
 	F1=fopen("DiarioViagens.txt","a");									//acrecenta no fim do ficheiro
 	fprintf(F1, "\n");													//nao sei se é preciso temos de testar
-	
+
 	printf("Dia de inicio da viagem(dd mm aaaa): \n");
 	scanf("%d%d%d", &dia, &mes, &ano);
 	fflush(stdin);
 	fprintf(F1, "%d;%d;%d;", dia, mes, ano);
-	
+
 	printf("Duracao da viagem(em dias): \n");
 	scanf("%d", &duracao);
 	fflush(stdin);
 	fprintf(F1, "%d;", duracao);
-	
+
 	printf("Meio de transporte usado:\n1 - Aviao\n2 - Carro\n");
 	scanf("%d", &meioT);
 	fflush(stdin);
 	fprintf(F1, "%d;", meioT);
-	
+
 	printf("Distancia percorrida durante a viagem(em quilometros): ");
 	scanf("%d", &kmPercorridos);
 	fflush(stdin);
 	fprintf(F1, "%d;", kmPercorridos);
-	
+
 	printf("Custo total da viagem(em euros): ");
 	scanf("%d", &custo);
 	fflush(stdin);
 	fprintf(F1, "%d;", custo);
-	
+
 	printf("Destino da viagem\nPais: ");
 	scanf("%s", destinoP);
 	fflush(stdin);
 	destinoP = ajustaMemoria(destinoP, strlen(destinoP));
 	fprintf(F1, "%s;", destinoP);
-	
+
 	printf("Numero de cidades visitadas: ");
 	scanf("%d", &nCidades);
 	fflush(stdin);
 	fprintf(F1, "%d", nCidades);
-	
+
 	for(i = 0; i < nCidades; i++)
 	{
 		printf("Cidade numero %d: ", i + 1);
@@ -305,10 +305,10 @@ void criaViagem()
 		fflush(stdin);
 		fprintf(F1, ";%s", cidade);
 	}
-	
+
 	fclose(F1);
-	
-	if(procuraAno(ano) == NULL)	
+
+	if(procuraAno(ano) == NULL)
 	{
 		adicionaAno(ano);
 	}
@@ -324,7 +324,7 @@ void criaViagem()
 	auxV -> seg = NULL;
 	actualizaDados(auxA, auxV);
 	insereViagem(auxA, auxV);
-	
+
 }
 
 void leFicheiro()
@@ -336,11 +336,11 @@ void leFicheiro()
 	struct Data auxD;
 	struct Ano *auxA;
 	struct Viagem auxV;
-	
+
 	auxA = malloc(sizeof(struct Ano));
 	destinoP = malloc(50 * sizeof(char));
 	info = malloc(50 * sizeof(char));
-	
+
 	if(fopen("DiarioViagens.txt", "r") == NULL)
 	{
 		F1 = fopen("DiarioViagens.txt", "w");
@@ -360,7 +360,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		dia = atoi(info);
 		auxD.dia = dia;
-		
+
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -373,7 +373,7 @@ void leFicheiro()
 		mes = atoi(info);
 		auxD.mes = mes;
 		auxV.diaIni = auxD;
-		
+
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -389,7 +389,7 @@ void leFicheiro()
 			adicionaAno(ano);
 		}
 		auxA = procuraAno(ano);
-		
+
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -401,7 +401,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		duracao = atoi(info);
 		auxV.duracao = duracao;
-		
+
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -413,7 +413,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		meioT = atoi(info);
 		auxV.meioT = meioT;
-		
+
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -425,7 +425,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		kmPercorridos = atoi(info);
 		auxV.kmPercorridos = kmPercorridos;
-		
+
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -437,7 +437,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		custo = atoi(info);
 		auxV.custo = custo;
-		
+
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -450,7 +450,7 @@ void leFicheiro()
 		memmove(destinoP, info, strlen(info) + 1);
 		destinoP = ajustaMemoria(destinoP, strlen(destinoP));
 		auxV.destinoP = destinoP;
-		
+
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -462,8 +462,8 @@ void leFicheiro()
 		*(info + i) = '\0';
 		nCidades = atoi(info);
 		auxV.nCidades = nCidades;
-		
-		auxV.cidades = NULL;		
+
+		auxV.cidades = NULL;
 		insereCidade(&auxV, NULL);
 		i = 0;
 		c = fgetc(F1);
@@ -476,7 +476,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		auxV.cidades->cidade = malloc(strlen(info) * sizeof(char));
 		memmove(auxV.cidades->cidade, info, strlen(info));
-		
+
 		auxC = auxV.cidades;
 		while(c != EOF && c != '\n')
 		{
@@ -494,7 +494,7 @@ void leFicheiro()
 			auxC->cidade = malloc(strlen(info) * sizeof(char));
 			memmove(auxC->cidade, info, strlen(info));
 		}
-		
+
 		auxV.seg = NULL;
 		auxA->viagens = NULL;
 		insereViagem(auxA, &auxV);
@@ -522,7 +522,7 @@ int percentagem(int a, int b){
 		assert(a < b);
 		res = (a*100)/b;
 		return res;
-		}	
+		}
 	}
 
 int imprimeCidades()
@@ -570,7 +570,7 @@ int imprimeCidades()
 		}
 	return conta;
 	}
-	
+
 int contaCidades()
 {
 	int jaexiste;
@@ -863,6 +863,8 @@ void percentagemDespesaViagem(int k){
 }
 
 void percentagemDespesaAno(int k){
+	struct Ano *auxA;
+	
 	auxA = malloc(sizeof(struct Ano));
 	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
 			printf("Ano %d, %d %%.\n",auxA->ano,percentagem(auxA->despesa,k));
@@ -913,7 +915,7 @@ void imprimeDiasViagemPercentagem(int k){
 			printf("Viagem %d/%d/%d, %d %%.\n",auxV->diaIni.dia,auxV->diaIni.mes,auxA->ano,percentagem(auxV->duracao,k));
 			}
 		}
-	
+
 	}
 
 void imprimeDiasAno(){
@@ -957,10 +959,10 @@ void consultaInformacao(){
 	struct Ano *corrente;
 
 	printf("		Países e cidades visitadas \n");
-	
+
 	printf("Países:\n");
 	k=imprimePaises();
-	
+
 	printf("Total de países: %d\n", k);
 
 	printf("Total de países por ano: \n" );
@@ -971,7 +973,7 @@ void consultaInformacao(){
 
 	printf("Cidades:\n");
 	k=imprimeCidades();
-	
+
 	printf("Total de cidades: %d\n", k);
 
 	printf("Total de cidades por ano:\n" );
@@ -1011,10 +1013,10 @@ void consultaInformacao(){
 	printf("		Despesas:");
 	k=despesasAno();
 	printf("Total de despesas: %d\n",k);
-	
+
 	printf("Despesa por viagem :\n");
 	imprimeDespesaViagem();
-	
+
 	printf("Despesa por ano :\n");
 	imprimeDespesaAno();
 
@@ -1038,12 +1040,12 @@ void consultaPercentagens(){ //esta tudo arredondado as unidades!!!! ????? e agr
 	printf("Valor percentual de países visitados por ano: \n" );
 	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
 			k=contaPaisesAno(corrente);
-			
+
 			printf("Em %d, %d %%.\n ",corrente->ano,percentagem(k,n));
 			}
 
 	n=contaCidades();
-	
+
 	printf("Valor percentual de cidades visitados por ano:\n" );
 	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
 		k=contaCidadesAno(corrente);
@@ -1059,7 +1061,7 @@ void consultaPercentagens(){ //esta tudo arredondado as unidades!!!! ????? e agr
 	printf("Valor percentual de quilómetros percorridos por ano:\n");
 	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
 			k=contaKmAno(corrente);
-			printf("Em %d, %d %%.\n ",corrente->ano,percentagem(k, i)); 
+			printf("Em %d, %d %%.\n ",corrente->ano,percentagem(k, i));
 			}
 	n=i;
 	i=0;
@@ -1074,16 +1076,16 @@ void consultaPercentagens(){ //esta tudo arredondado as unidades!!!! ????? e agr
 			k=contaKmCarroAno(corrente);
 			i=i+k;
 			}
-	printf("Valor percentual de quilómetros percorridos de Carro: %d\n",percentagem(i,n)); 
+	printf("Valor percentual de quilómetros percorridos de Carro: %d\n",percentagem(i,n));
 
 	k=despesasAno();
-	
-	printf("Valor percentual de despesas por viagem :\n");				
+
+	printf("Valor percentual de despesas por viagem :\n");
 	percentagemDespesaViagem(k);		//pega no k, faz a percentagem gasta em cada uma das viagens em relação a k e imprime no terminal
-	
-	printf("Valor percentual de despesas por ano :\n");				
+
+	printf("Valor percentual de despesas por ano :\n");
 	percentagemDespesaAno(k);
-	
+
 	k=totalDiasViagem();
 
 	printf("Valor percentual da duracao de cada viagem:\n");
@@ -1091,13 +1093,13 @@ void consultaPercentagens(){ //esta tudo arredondado as unidades!!!! ????? e agr
 
 	printf("Valor percentual dos dias de viagem por ano:\n");
 	imprimeDiasAnoPercentagem(k);
-	
+
 	}
 
 void criaRelatorioe(){ //atençao a ordem alfabetica
-	
-	
-	
+
+
+
 	}
 
 
@@ -1107,12 +1109,12 @@ void criaRelatoriof(){ //atençao a ordem alfabetica
 	FILE *fp;
 	printf("Introduza a data atual (dd mm aaaa): \n");
 	scanf("%s", data);
-	
+
 	sprintf(ficheiro,"Relatorio%s.txt",data);
 
 	fp=fopen(ficheiro,"w");
- 
-	
+
+
 	}
 
 
@@ -1144,33 +1146,33 @@ void menu()
 				getchar();
 				fflush(stdin);
 				break;
-				
+
 				case 2:
 				consultaInformacao();
 				break;
-				
+
 				case 3:
 				consultaPercentagens();
 				break;
-				
+
 				case 4:
 				criaRelatorioe();
 				break;
-				
+
 				case 5:
 				criaRelatoriof();
 				break;
-				
+
 				case 6:
 				s = 0;
-				
+
 				break;
-				
+
 				default:
 				printf("Parametro invalido...");
 			}
-			
-			
+
+
 			}
 	}
 }
@@ -1180,5 +1182,3 @@ int main()
 	menu();
 	return 0;
 }
-
-
