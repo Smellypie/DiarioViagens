@@ -506,9 +506,10 @@ struct Cidade *criaCidade()
 	return aux;
 }
 
-void imprimeCidades()
+int imprimeCidades()
 {
 	int jaexiste;
+	int conta;
 	struct Ano *auxA;
 	struct Viagem *auxV;
 	struct Cidade *auxC;
@@ -516,6 +517,7 @@ void imprimeCidades()
 	struct Cidade *todasaux1;
 	struct Cidade *todasaux2;
 	struct Cidade *todasprox;
+	conta=0;
 	auxA = malloc(sizeof(struct Ano));
 	auxV = malloc(sizeof(struct Viagem));
 	auxC = malloc(sizeof(struct Cidade));
@@ -526,7 +528,7 @@ void imprimeCidades()
 	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
 		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
 			for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg){					//cidade a cidade
-				//printf("%s\n", auxC -> cidade);											//teste		
+				//printf("%s\n", auxC -> cidade);											//teste
 				for(todasaux2 = todas; todasaux2 != NULL; todasaux2 = todasaux2 -> seg){	//ver se a cidade ja foi guardada no 'todas'
 					if(strcmp(todasaux2 -> cidade, auxC -> cidade) == 0){jaexiste = 1;}}	//verifica se ja existe
 				if(jaexiste != 1){															//se a cidade nao existe
@@ -541,19 +543,26 @@ void imprimeCidades()
 			}
 		}
 	for(todasaux1 = todas; todasaux1 != NULL; todasaux1 = todasaux1 -> seg){				//cidade a cidade
-		printf("%s\n", todasaux1 -> cidade);			//falta por por ordem alfabetica
+		if(strcmp(todasaux1 -> cidade,"Dummy") != 0){						//Se o nomme da cidade for diferente do dummy(pode haver algumas partes do todas que teem Dummy escrito la dentro)
+			printf("%s\n", todasaux1 -> cidade);			//falta por por ordem alfabetica
+			conta++;
+			}
 		}
+	return conta;
 	}
 
-void imprimePaises(){
+int imprimePaises(){
 	int jaexiste;
+	int conta;
 	struct Ano *auxA;
 	struct Viagem *auxV;
-
+	struct Cidade *auxC;
 	struct Cidade *todas;
 	struct Cidade *todasaux1;
 	struct Cidade *todasaux2;
 	struct Cidade *todasprox;
+
+	conta=0;
 	auxA = malloc(sizeof(struct Ano));
 	auxV = malloc(sizeof(struct Viagem));
 	auxC = malloc(sizeof(struct Cidade));
@@ -562,7 +571,7 @@ void imprimePaises(){
 	todasaux2 = malloc(sizeof(struct Cidade));
 	todasaux1 = todas;
 	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
-		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem	
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
 			for(todasaux2 = todas; todasaux2 != NULL; todasaux2 = todasaux2 -> seg){	//ver se o pais ja foi guardada no 'todas'
 				if(strcmp(todasaux2 -> cidade, auxV -> destinoP) == 0){jaexiste = 1;}}	//verifica se ja existe
 			if(jaexiste != 1){															//se o pais nao existe
@@ -573,26 +582,31 @@ void imprimePaises(){
 				jaexiste = 0;
 				}
 			}
-			
+
 		}
-		
+
 	for(todasaux1 = todas; todasaux1 != NULL; todasaux1 = todasaux1 -> seg){				//pais a pais
-		printf("%s\n", todasaux1 -> cidade);			//falta por por ordem alfabetica
+		if(strcmp(todasaux1 -> cidade,"Dummy") != 0){									//Se o nomme da cidade for diferente do dummy(pode haver algumas partes do todas que teem Dummy escrito la dentro)
+			printf("%s\n", todasaux1 -> cidade);											//falta por por ordem alfabetica
+			conta++;
+			}
 		}
+	return conta;
 	}
 
+
 void consultaInformacao(){
-	int i;
+	int i,k;
 	printf("		Países e cidades visitadas \n");
 	printf("Países:\n");
-	imprimePaises();
-	printf("Total de países: %d\n", );
+	k=imprimePaises();
+	printf("Total de países: %d\n", k);
 	printf("Total de países por ano:\n");
 	printf("Cidades:\n");
-	imprimeCidades();
-	printf("Total de cidades: %d\n", );
+	k=imprimeCidades();
+	printf("Total de cidades: %d\n", k);
 	printf("Total de cidades por ano: %d\n", );
-	
+
 	printf("		Número de quilómetros percorridos:\n");
 	printf("Total de quilómetros percorridos:\n");
 	printf("Total de quilómetros percorridos:\n");
