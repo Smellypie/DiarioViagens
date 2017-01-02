@@ -597,36 +597,25 @@ int imprimePaises(){
 	}
 
 
-int contaAnos(){
-	int conta;
-	struct Ano *auxA;
-	conta=0;
-	auxA = malloc(sizeof(struct Ano));
-	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){
-		conta++;
-		}
-	
-	return conta;
-	}
 
 
 
 void consultaInformacao(){
-	int i,k,anos;
-	float j;
+	int i,k;
+
 	
-	anos=contaAnos();
+
 	printf("		Países e cidades visitadas \n");
 	printf("Países:\n");
 	k=imprimePaises();
 	printf("Total de países: %d\n", k);
-	j=((k*1.0f)/anos);											//Faz a conta países por ano
-	printf("Total de países por ano: %f\n", j);
+
+	printf("Total de países por ano: %f\n", );
 	printf("Cidades:\n");
 	k=imprimeCidades();
 	printf("Total de cidades: %d\n", k);
-	j=((k*1.0f)/anos);											//Faz a conta cidades por ano
-	printf("Total de cidades por ano: %f\n", j);
+
+	printf("Total de cidades por ano: %f\n", );
 
 	printf("		Número de quilómetros percorridos:\n");
 	printf("Total de quilómetros percorridos:\n");
