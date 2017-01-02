@@ -497,7 +497,6 @@ void leFicheiro()
 		fclose(F1);
 	}
 }
-
 struct Cidade *criaCidade()
 {
 	struct Cidade *aux = malloc(sizeof(struct Cidade));
@@ -552,12 +551,61 @@ int imprimeCidades()
 	return conta;
 	}
 
+int contaCidadesAno(struct Ano *corrente){
+
+	int jaexiste;
+	int conta;
+	struct Viagem *auxV;
+	struct Cidade *auxC;
+	struct Cidade *todas;
+	struct Cidade *todasaux1;
+	struct Cidade *todasaux2;
+	struct Cidade *todasprox;
+	conta=0;
+	jaexiste=0;
+	auxV = malloc(sizeof(struct Viagem));
+	auxC = malloc(sizeof(struct Cidade));
+	todas = malloc(sizeof(struct Cidade));
+	todasaux1 = malloc(sizeof(struct Cidade));
+	todasaux2 = malloc(sizeof(struct Cidade));
+	todasaux1 = todas;
+
+	for(auxV = corrente->viagens; auxV != NULL; auxV = auxV -> seg){							//viagem a viagem
+		for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg){						//cidade a cidade
+
+			for(todasaux2 = todas; todasaux2 != NULL; todasaux2 = todasaux2 -> seg){	//ver se a cidade ja foi guardada no 'todas'
+				if(strcmp(todasaux2 -> cidade, auxC -> cidade) == 0){jaexiste = 1;}}	//verifica se ja existe
+			if(jaexiste != 1){															//se a cidade nao existe
+				//todasaux1 -> cidade = auxC -> cidade;									//guardar a cidade
+				strcpy(todasaux1 -> cidade, auxC -> cidade);
+				todasprox = criaCidade();												//criar o proximo sitio para guardar a cidade
+				todasaux1 -> seg = todasprox;											//juntar à lista todas
+				todasaux1 = todasaux1 -> seg;											//avanço do auxiliar
+				jaexiste = 0;
+				}
+			}
+		}
+
+	for(todasaux1 = todas; todasaux1 != NULL; todasaux1 = todasaux1 -> seg){				//cidade a cidade
+		if(strcmp(todasaux1 -> cidade,"Dummy") != 0){						//Se o nomme da cidade for diferente do dummy(pode haver algumas partes do todas que teem Dummy escrito la dentro)
+			conta++;
+			}
+		}
+	return conta;
+
+
+
+}
+
+
+
+
+
 int imprimePaises(){
 	int jaexiste;
 	int conta;
 	struct Ano *auxA;
 	struct Viagem *auxV;
-	struct Cidade *auxC;
 	struct Cidade *todas;
 	struct Cidade *todasaux1;
 	struct Cidade *todasaux2;
@@ -567,7 +615,6 @@ int imprimePaises(){
 	jaexiste=0;
 	auxA = malloc(sizeof(struct Ano));
 	auxV = malloc(sizeof(struct Viagem));
-	auxC = malloc(sizeof(struct Cidade));
 	todas = malloc(sizeof(struct Cidade));
 	todasaux1 = malloc(sizeof(struct Cidade));
 	todasaux2 = malloc(sizeof(struct Cidade));
@@ -598,24 +645,76 @@ int imprimePaises(){
 
 
 
+int contaPaisesAno(struct Ano *corrente){
+	int jaexiste;
+	int conta;
+	struct Viagem *auxV;
+	struct Cidade *todas;
+	struct Cidade *todasaux1;
+	struct Cidade *todasaux2;
+	struct Cidade *todasprox;
+
+	conta=0;
+	jaexiste=0;
+	auxV = malloc(sizeof(struct Viagem));
+	todas = malloc(sizeof(struct Cidade));
+	todasaux1 = malloc(sizeof(struct Cidade));
+	todasaux2 = malloc(sizeof(struct Cidade));
+	todasaux1 = todas;
+
+		for(auxV = corrente -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			for(todasaux2 = todas; todasaux2 != NULL; todasaux2 = todasaux2 -> seg){	//ver se o pais ja foi guardada no 'todas'
+				if(strcmp(todasaux2 -> cidade, auxV -> destinoP) == 0){jaexiste = 1;}}	//verifica se ja existe
+			if(jaexiste != 1){															//se o pais nao existe
+				strcpy(todasaux1 -> cidade, auxV -> destinoP);
+				todasprox = criaCidade();												//criar o proximo sitio para guardar o pais
+				todasaux1 -> seg = todasprox;											//juntar à lista todas
+				todasaux1 = todasaux1 -> seg;											//avanço do auxiliar
+				jaexiste = 0;
+				}
+			}
+
+
+
+	for(todasaux1 = todas; todasaux1 != NULL; todasaux1 = todasaux1 -> seg){				//pais a pais
+		if(strcmp(todasaux1 -> cidade,"Dummy") != 0){									//Se o nomme do paise for diferente do dummy(pode haver algumas partes do todas que teem Dummy escrito la dentro)
+			conta++;
+			}
+		}
+	return conta;
+	}
+
+
+
 
 
 void consultaInformacao(){
 	int i,k;
+	struct Ano *corrente;
 
-	
+
 
 	printf("		Países e cidades visitadas \n");
 	printf("Países:\n");
 	k=imprimePaises();
 	printf("Total de países: %d\n", k);
 
-	printf("Total de países por ano: %f\n", );
+
+	printf("Total de países por ano: \n" );
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaPaisesAno(corrente);
+			printf("Em %d, %d paises.\n ",corrente->ano,k);
+			}
+
 	printf("Cidades:\n");
 	k=imprimeCidades();
 	printf("Total de cidades: %d\n", k);
 
-	printf("Total de cidades por ano: %f\n", );
+	printf("Total de cidades por ano:\n" );
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+		k=contaCidadesAno(corrente);
+		printf("Em %d, %d cidades.\n ",corrente->ano,k);
+		}
 
 	printf("		Número de quilómetros percorridos:\n");
 	printf("Total de quilómetros percorridos:\n");
