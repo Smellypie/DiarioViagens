@@ -20,7 +20,7 @@ struct Ano
 {
 	int ano;
 	int despesa;														//despesa total nesse ano
-	int nDestinos;														//número de cidades/países visitados no total nesse ano
+	int nDestinos;														//número de cidades visitados no total nesse ano
 	int kmAviao;														//distância percorrida de avião durante esse ano
 	int kmCarro;														//distância percorrida de carro durante esse ano
 	int diasViagem;														//número total de dias de viagem nesse ano
@@ -73,7 +73,8 @@ char *ajustaMemoria(char *str, int len)									//cria uma nova string com apena
 void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os valores dos custos ... totais e por ano
 {
 	ano->despesa += viagem->custo;
-	//ano->nDestinos += viagem->
+	ano->nViagens++;
+	ano->nDestinos += viagem->nCidades;
 	if(viagem->meioT == 1)
 	{
 		ano->kmAviao += viagem->kmPercorridos;
@@ -85,7 +86,8 @@ void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os va
 	ano->diasViagem += viagem->duracao;
 	
 	calendario->despesa += viagem->custo;
-	//ano->nDestinos += viagem->
+	calendario->nViagens++;
+	calendario->nDestinos += viagem->nCidades;
 	if(viagem->meioT == 1)
 	{
 		calendario->kmAviao += viagem->kmPercorridos;
