@@ -886,7 +886,7 @@ void imprimeDiasViagem(){
 		}
 }
 
-imprimeDiasViagemPercentagem(int k){
+void imprimeDiasViagemPercentagem(int k){
 	struct Ano *auxA;
 	struct Viagem *auxV;
 
