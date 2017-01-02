@@ -555,6 +555,51 @@ int imprimeCidades()
 		}
 	return conta;
 	}
+	
+int contaCidades()
+{
+	int jaexiste;
+	int conta;
+	struct Ano *auxA;
+	struct Viagem *auxV;
+	struct Cidade *auxC;
+	struct Cidade *todas;
+	struct Cidade *todasaux1;
+	struct Cidade *todasaux2;
+	struct Cidade *todasprox;
+	conta=0;
+	jaexiste=0;
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+	auxC = malloc(sizeof(struct Cidade));
+	todas = malloc(sizeof(struct Cidade));
+	todasaux1 = malloc(sizeof(struct Cidade));
+	todasaux2 = malloc(sizeof(struct Cidade));
+	todasaux1 = todas;
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg){					//cidade a cidade
+				//printf("%s\n", auxC -> cidade);											//teste
+				for(todasaux2 = todas; todasaux2 != NULL; todasaux2 = todasaux2 -> seg){	//ver se a cidade ja foi guardada no 'todas'
+					if(strcmp(todasaux2 -> cidade, auxC -> cidade) == 0){jaexiste = 1;}}	//verifica se ja existe
+				if(jaexiste != 1){															//se a cidade nao existe
+					//todasaux1 -> cidade = auxC -> cidade;									//guardar a cidade
+					strcpy(todasaux1 -> cidade, auxC -> cidade);
+					todasprox = criaCidade();												//criar o proximo sitio para guardar a cidade
+					todasaux1 -> seg = todasprox;											//juntar à lista todas
+					todasaux1 = todasaux1 -> seg;											//avanço do auxiliar
+					jaexiste = 0;
+					}
+				}
+			}
+		}
+	for(todasaux1 = todas; todasaux1 != NULL; todasaux1 = todasaux1 -> seg){				//cidade a cidade
+		if(strcmp(todasaux1 -> cidade,"Dummy") != 0){						//Se o nomme da cidade for diferente do dummy(pode haver algumas partes do todas que teem Dummy escrito la dentro)
+			conta++;
+			}
+		}
+	return conta;
+	}
 
 int contaCidadesAno(struct Ano *corrente){
 
@@ -647,6 +692,46 @@ int imprimePaises(){
 		}
 	return conta;
 	}
+int contaPaises(){
+	int jaexiste;
+	int conta;
+	struct Ano *auxA;
+	struct Viagem *auxV;
+	struct Cidade *todas;
+	struct Cidade *todasaux1;
+	struct Cidade *todasaux2;
+	struct Cidade *todasprox;
+
+	conta=0;
+	jaexiste=0;
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+	todas = malloc(sizeof(struct Cidade));
+	todasaux1 = malloc(sizeof(struct Cidade));
+	todasaux2 = malloc(sizeof(struct Cidade));
+	todasaux1 = todas;
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			for(todasaux2 = todas; todasaux2 != NULL; todasaux2 = todasaux2 -> seg){	//ver se o pais ja foi guardada no 'todas'
+				if(strcmp(todasaux2 -> cidade, auxV -> destinoP) == 0){jaexiste = 1;}}	//verifica se ja existe
+			if(jaexiste != 1){															//se o pais nao existe
+				strcpy(todasaux1 -> cidade, auxV -> destinoP);
+				todasprox = criaCidade();												//criar o proximo sitio para guardar o pais
+				todasaux1 -> seg = todasprox;											//juntar à lista todas
+				todasaux1 = todasaux1 -> seg;											//avanço do auxiliar
+				jaexiste = 0;
+				}
+			}
+
+		}
+
+	for(todasaux1 = todas; todasaux1 != NULL; todasaux1 = todasaux1 -> seg){				//pais a pais
+		if(strcmp(todasaux1 -> cidade,"Dummy") != 0){									//Se o nomme da cidade for diferente do dummy(pode haver algumas partes do todas que teem Dummy escrito la dentro)
+			conta++;
+			}
+		}
+	return conta;
+	}
 
 
 
@@ -725,7 +810,6 @@ int despesasAno(){
 }
 
 void imprimeDespesaViagem(){
-
 	struct Ano *auxA;
 	struct Viagem *auxV;
 
@@ -737,9 +821,40 @@ void imprimeDespesaViagem(){
 			printf("Viagem %d/%d/%d, %d de despesa.\n",auxV->diaIni.dia,auxV->diaIni.mes,auxA->ano,auxV->custo);
 			}
 		}
-	return;
 }
-int diasAno(){
+
+void imprimeDespesaAno(){
+	struct Ano *auxA;
+	auxA = malloc(sizeof(struct Ano));
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+			printf("Ano %d, %d de despesa.\n",auxA->ano,auxA->despesa);
+		}
+	}
+
+
+void percentagemDespesaViagem(int k){
+
+	struct Ano *auxA;
+	struct Viagem *auxV;
+
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			printf("Viagem %d/%d/%d, %d %%.\n",auxV->diaIni.dia,auxV->diaIni.mes,auxA->ano,percentagem(auxV->custo,k));
+			}
+		}
+}
+
+void percentagemDespesaAno(int k){
+	auxA = malloc(sizeof(struct Ano));
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+			printf("Ano %d, %d %%.\n",auxA->ano,percentagem(auxA->despesa,k));
+		}
+	}
+
+int totalDiasViagem(){
 
 	int soma;
 	struct Ano *auxA;
@@ -769,8 +884,22 @@ void imprimeDiasViagem(){
 			printf("Viagem %d/%d/%d, %d dias.\n",auxV->diaIni.dia,auxV->diaIni.mes,auxA->ano,auxV->duracao);
 			}
 		}
-	return;
 }
+
+imprimeDiasViagemPercentagem(int k){
+	struct Ano *auxA;
+	struct Viagem *auxV;
+
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			printf("Viagem %d/%d/%d, %d %%.\n",auxV->diaIni.dia,auxV->diaIni.mes,auxA->ano,percentagem(auxV->duracao,k));
+			}
+		}
+	
+	}
 
 void imprimeDiasAno(){
 
@@ -785,10 +914,27 @@ void imprimeDiasAno(){
 		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
 			soma=soma+auxV->duracao;
 			}
-		printf("Ano %d, %d dias.\n",auxA->ano,auxV->duracao);
+		printf("Ano %d, %d dias de viagem.\n",auxA->ano,auxV->duracao);
 		soma=0;
 		}
-	return;
+}
+
+void imprimeDiasAnoPercentagem(int k){
+
+	int soma;
+	struct Ano *auxA;
+	struct Viagem *auxV;
+	soma=0;
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			soma=soma+auxV->duracao;
+			}
+		printf("Ano %d, %d %%.\n",auxA->ano,percentagem(auxV->duracao,k));
+		soma=0;
+		}
 }
 
 void consultaInformacao(){
@@ -796,8 +942,10 @@ void consultaInformacao(){
 	struct Ano *corrente;
 
 	printf("		Países e cidades visitadas \n");
+	
 	printf("Países:\n");
 	k=imprimePaises();
+	
 	printf("Total de países: %d\n", k);
 
 	printf("Total de países por ano: \n" );
@@ -808,6 +956,7 @@ void consultaInformacao(){
 
 	printf("Cidades:\n");
 	k=imprimeCidades();
+	
 	printf("Total de cidades: %d\n", k);
 
 	printf("Total de cidades por ano:\n" );
@@ -848,11 +997,14 @@ void consultaInformacao(){
 	k=despesasAno();
 	printf("Total de despesas: %d\n",k);
 	
-	printf("Despesa viagem :\n");
+	printf("Despesa por viagem :\n");
 	imprimeDespesaViagem();
+	
+	printf("Despesa por ano :\n");
+	imprimeDespesaAno();
 
 	printf("		Dias de viagem:");
-	k=diasAno();
+	k=totalDiasViagem();
 	printf("Total de dias de viagem: %d\n",k);
 
 	printf("Dias de viagem por viagem:\n");
@@ -864,27 +1016,80 @@ void consultaInformacao(){
 
 int percentagem(int a, int b){
 	int res;
-	if(a == 0 && b == 0){
+	if(a == 0 || b == 0){ //se "a" ou "b" forem iguais a zero
 		return -1;
 		}
 	else{
 		assert(a > 0);
 		assert(b > 0);
-		assert(a > b);
+		assert(a < b);
 		res = (a*100)/b;
 		return res;
 		}	
 	}
 
-void consultaPercentagens(){
-	printf("");
-	printf("");
-	printf("");
-	printf("");
-	printf("");
+void consultaPercentagens(){ //esta tudo arredondado as unidades!!!! ????? e agr?
+	int i,k,n;
+	struct Ano *corrente;
+
+	n=contaPaises();
+
+	printf("Valor percentual de países visitados por ano: \n" );
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaPaisesAno(corrente);
+			
+			printf("Em %d, %d %%.\n ",corrente->ano,percentagem(k,n));
+			}
+
+	n=contaCidades();
 	
+	printf("Valor percentual de cidades visitados por ano:\n" );
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+		k=contaCidadesAno(corrente);
+		printf("Em %d, %d %%.\n ",corrente->ano,percentagem(k,n));
+		}
+
+	i=0;
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaKmAno(corrente);
+			i=i+k;
+			}
+
+	printf("Valor percentual de quilómetros percorridos por ano:\n");
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaKmAno(corrente);
+			printf("Em %d, %d %%.\n ",corrente->ano,percentagem(k, i)); 
+			}
+	n=i;
+	i=0;
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaKmAviaoAno(corrente);
+			i=i+k;
+			}
+	printf("Valor percentual de quilómetros percorridos de Aviao: %d\n",percentagem(i,n));
+
+	i=0;
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaKmCarroAno(corrente);
+			i=i+k;
+			}
+	printf("Valor percentual de quilómetros percorridos de Carro: %d\n",percentagem(i,n)); 
+
+	k=despesasAno();
 	
+	printf("Valor percentual de despesas por viagem :\n");				
+	percentagemDespesaViagem(k);		//pega no k, faz a percentagem gasta em cada uma das viagens em relação a k e imprime no terminal
 	
+	printf("Valor percentual de despesas por ano :\n");				
+	percentagemDespesaAno(k);
+	
+	k=totalDiasViagem();
+
+	printf("Valor percentual da duracao de cada viagem:\n");
+	imprimeDiasViagemPercentagem();
+
+	printf("Valor percentual dos dias de viagem por ano:\n");
+	imprimeDiasAnoPercentagem();
 	
 	}
 
