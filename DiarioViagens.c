@@ -510,6 +510,21 @@ struct Cidade *criaCidade()
 	return aux;
 }
 
+
+int percentagem(int a, int b){
+	int res;
+	if(a == 0 || b == 0){ //se "a" ou "b" forem iguais a zero
+		return -1;
+		}
+	else{
+		assert(a > 0);
+		assert(b > 0);
+		assert(a < b);
+		res = (a*100)/b;
+		return res;
+		}	
+	}
+
 int imprimeCidades()
 {
 	int jaexiste;
@@ -1014,20 +1029,6 @@ void consultaInformacao(){
 	imprimeDiasAno();
 	}
 
-int percentagem(int a, int b){
-	int res;
-	if(a == 0 || b == 0){ //se "a" ou "b" forem iguais a zero
-		return -1;
-		}
-	else{
-		assert(a > 0);
-		assert(b > 0);
-		assert(a < b);
-		res = (a*100)/b;
-		return res;
-		}	
-	}
-
 void consultaPercentagens(){ //esta tudo arredondado as unidades!!!! ????? e agr?
 	int i,k,n;
 	struct Ano *corrente;
@@ -1086,10 +1087,10 @@ void consultaPercentagens(){ //esta tudo arredondado as unidades!!!! ????? e agr
 	k=totalDiasViagem();
 
 	printf("Valor percentual da duracao de cada viagem:\n");
-	imprimeDiasViagemPercentagem();
+	imprimeDiasViagemPercentagem(k);
 
 	printf("Valor percentual dos dias de viagem por ano:\n");
-	imprimeDiasAnoPercentagem();
+	imprimeDiasAnoPercentagem(k);
 	
 	}
 
