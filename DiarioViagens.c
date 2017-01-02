@@ -497,6 +497,7 @@ void leFicheiro()
 		fclose(F1);
 	}
 }
+
 struct Cidade *criaCidade()
 {
 	struct Cidade *aux = malloc(sizeof(struct Cidade));
@@ -683,22 +684,117 @@ int contaPaisesAno(struct Ano *corrente){
 		}
 	return conta;
 	}
+int contaKmAviaoAno(struct Ano *corrente){
+	int conta;
+	conta=corrente->kmAviao;
+	return conta;
+}
+int contaKmCarroAno(struct Ano *corrente){
+	int conta;
+	conta=corrente->kmCarro;
+	return conta;
+}
+
+int contaKmAno(struct Ano *corrente){
+	int conta,aux;
+	conta=0;
+	aux=contaKmAviaoAno(corrente);
+	conta=conta + aux;
+	aux=contaKmCarroAno(corrente);
+	conta=conta + aux;
+	return aux;
+}
 
 
 
+int despesasAno(){
 
+	int despesa;
+	struct Ano *auxA;
+	despesa=0;
+	auxA = malloc(sizeof(struct Ano));
+
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		despesa=despesa+auxA->despesa;
+		}
+	return despesa;
+}
+
+void imprimeDespesaViagem(){
+
+	struct Ano *auxA;
+	struct Viagem *auxV;
+
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			printf("Viagem %d/%d/%d, %d de despesa.\n",auxV->diaIni.dia,auxV->diaIni.mes,auxA->ano,auxV->custo);
+			}
+		}
+	return;
+}
+int diasAno(){
+
+	int soma;
+	struct Ano *auxA;
+	struct Viagem *auxV;
+	soma=0;
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			soma=soma+auxV->duracao;
+			}
+		}
+	return soma;
+}
+
+void imprimeDiasViagem(){
+
+	struct Ano *auxA;
+	struct Viagem *auxV;
+
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			printf("Viagem %d/%d/%d, %d dias.\n",auxV->diaIni.dia,auxV->diaIni.mes,auxA->ano,auxV->duracao);
+			}
+		}
+	return;
+}
+
+void imprimeDiasAno(){
+
+	int soma;
+	struct Ano *auxA;
+	struct Viagem *auxV;
+	soma=0;
+	auxA = malloc(sizeof(struct Ano));
+	auxV = malloc(sizeof(struct Viagem));
+
+	for(auxA = calendario; auxA != NULL; auxA = auxA -> seg){								//ano a ano
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg){						//viagem a viagem
+			soma=soma+auxV->duracao;
+			}
+		printf("Ano %d, %d dias.\n",auxA->ano,auxV->duracao);
+		soma=0;
+		}
+	return;
+}
 
 void consultaInformacao(){
 	int i,k;
 	struct Ano *corrente;
 
-
-
 	printf("		Países e cidades visitadas \n");
 	printf("Países:\n");
 	k=imprimePaises();
 	printf("Total de países: %d\n", k);
-
 
 	printf("Total de países por ano: \n" );
 	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
@@ -717,23 +813,50 @@ void consultaInformacao(){
 		}
 
 	printf("		Número de quilómetros percorridos:\n");
-	printf("Total de quilómetros percorridos:\n");
-	printf("Total de quilómetros percorridos:\n");
-	printf("Total de quilómetros percorridos de Aviao:\n");
-	printf("Total de quilómetros percorridos de Carro:\n");
-	
+	i=0;
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaKmAno(corrente);
+			i=i+k;
+			}
+	printf("Total de quilómetros percorridos: %d\n",i);
+
+	printf("Total de quilómetros percorridos por ano:\n");
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaKmAno(corrente);
+			printf("Em %d, %d quilometros.\n ",corrente->ano,k);
+			}
+
+	i=0;
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaKmAviaoAno(corrente);
+			i=i+k;
+			}
+	printf("Total de quilómetros percorridos de Aviao: %d\n",i);
+
+	i=0;
+	for(corrente=calendario;corrente!=NULL;corrente= corrente -> seg){
+			k=contaKmCarroAno(corrente);
+			i=i+k;
+			}
+	printf("Total de quilómetros percorridos de Carro: %d\n",i);
+
 	printf("		Despesas:");
-	printf("Total de despesas:\n");
-	printf("Despesa viagem %d: %d\n", i, ??);
+	k=despesasAno();
+	printf("Total de despesas: %d\n",k);
 	
-		
+	printf("Despesa viagem :\n");
+	imprimeDespesaViagem();
+
 	printf("		Dias de viagem:");
-	printf("Total de dias de viagem:\n");
+	k=diasAno();
+	printf("Total de dias de viagem: %d\n",k);
+
 	printf("Dias de viagem por viagem:\n");
+	imprimeDiasViagem();
+
 	printf("Dias de viagem por ano:\n");
+	imprimeDiasAno();
 	}
-
-
 
 int percentagem(int a, int b){
 	int res;
