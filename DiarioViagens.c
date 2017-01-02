@@ -518,6 +518,7 @@ int imprimeCidades()
 	struct Cidade *todasaux2;
 	struct Cidade *todasprox;
 	conta=0;
+	jaexiste=0;
 	auxA = malloc(sizeof(struct Ano));
 	auxV = malloc(sizeof(struct Viagem));
 	auxC = malloc(sizeof(struct Cidade));
@@ -563,6 +564,7 @@ int imprimePaises(){
 	struct Cidade *todasprox;
 
 	conta=0;
+	jaexiste=0;
 	auxA = malloc(sizeof(struct Ano));
 	auxV = malloc(sizeof(struct Viagem));
 	auxC = malloc(sizeof(struct Cidade));
