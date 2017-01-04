@@ -470,42 +470,51 @@ void leFicheiro()
 	}
 	else
 	{
-		F1 = fopen("DiarioViagens.txt", "r");
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
+		do
 		{
-			*(info + i) = c;
+			F1 = fopen("DiarioViagens.txt", "r");
+			i = 0;
 			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		dia = atoi(info);
-		auxD.dia = dia;
-		
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
-		{
-			*(info + i) = c;
+			while(c != ';')
+			{
+				*(info + i) = c;
+				c = fgetc(F1);
+				i++;
+			}
+			*(info + i) = '\0';
+			dia = atoi(info);
+			auxD.dia = dia;
+			
+			i = 0;
 			c = fgetc(F1);
-			i++;
+			while(c != ';')
+			{
+				*(info + i) = c;
+				c = fgetc(F1);
+				i++;
+			}
+			*(info + i) = '\0';
+			mes = atoi(info);
+			auxD.mes = mes;
+			
+			i = 0;
+			c = fgetc(F1);
+			while(c != ';')
+			{
+				*(info + i) = c;
+				c = fgetc(F1);
+				i++;
+			}
+			*(info + i) = '\0';
+			ano = atoi(info);
+			if(!verificaData(auxD, ano))
+			{
+				printf("Data invalida...");
+			}
 		}
-		*(info + i) = '\0';
-		mes = atoi(info);
-		auxD.mes = mes;
+		while(!verificaData(auxD, ano));
 		auxV.diaIni = auxD;
 		
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
-		{
-			*(info + i) = c;
-			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		ano = atoi(info);
 		if(procuraAno(ano) == NULL)
 		{
 			adicionaAno(ano);
