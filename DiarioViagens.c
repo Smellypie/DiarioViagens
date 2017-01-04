@@ -449,41 +449,71 @@ void criaViagem()
 	insereViagem(auxA, auxV);
 }
 
-void leFicheiro()
+void leFicheiro(FILE *F1, long int pos)
 {
-	FILE *F1;
 	int dia, mes, ano, duracao, meioT, kmPercorridos, custo, nCidades, i;
 	char *destinoP, *info, c;
 	struct Cidade *auxC;
 	struct Data auxD;
 	struct Ano *auxA;
-	struct Viagem auxV;
+	struct Viagem *auxV;
 	
-	auxA = malloc(sizeof(struct Ano));
-	destinoP = malloc(50 * sizeof(char));
-	info = malloc(50 * sizeof(char));
+	fseek(F1, pos, SEEK_SET);
 	
-	if(fopen("DiarioViagens.txt", "r") == NULL)
+	c = fgetc(F1);
+	if(c != EOF)
 	{
-		F1 = fopen("DiarioViagens.txt", "w");
-		printf("Como nao foi encontrado nenhum ficheiro com o nome \"DiarioViagens.txt\",\nfoi criado um vazio\n");
-	}
-	else
-	{
-		do
+		auxA = malloc(sizeof(struct Ano));
+		auxV = malloc(sizeof(struct Viagem));
+		destinoP = malloc(50 * sizeof(char));
+		info = malloc(50 * sizeof(char));
+		
+		i = 0;
+		while(c != ';')
 		{
-			F1 = fopen("DiarioViagens.txt", "r");
-			i = 0;
+			*(info + i) = c;
 			c = fgetc(F1);
-			while(c != ';')
+			i++;
+		}
+		*(info + i) = '\0';
+		dia = atoi(info);
+		auxD.dia = dia;
+		
+		i = 0;
+		c = fgetc(F1);
+		while(c != ';')
+		{
+			*(info + i) = c;
+			c = fgetc(F1);
+			i++;
+		}
+		*(info + i) = '\0';
+		mes = atoi(info);
+		auxD.mes = mes;
+		
+		i = 0;
+		c = fgetc(F1);
+		while(c != ';')
+		{
+			*(info + i) = c;
+			c = fgetc(F1);
+			i++;
+		}
+		*(info + i) = '\0';
+		ano = atoi(info);
+		if(!verificaData(auxD, ano))
+		{
+			printf("Data invalida...");
+		}
+		else
+		{
+			auxV->diaIni = auxD;
+			
+			if(procuraAno(ano) == NULL)
 			{
-				*(info + i) = c;
-				c = fgetc(F1);
-				i++;
+				adicionaAno(ano);
 			}
-			*(info + i) = '\0';
-			dia = atoi(info);
-			auxD.dia = dia;
+			auxA = procuraAno(ano);
 			
 			i = 0;
 			c = fgetc(F1);
@@ -494,8 +524,8 @@ void leFicheiro()
 				i++;
 			}
 			*(info + i) = '\0';
-			mes = atoi(info);
-			auxD.mes = mes;
+			duracao = atoi(info);
+			auxV->duracao = duracao;
 			
 			i = 0;
 			c = fgetc(F1);
@@ -506,113 +536,60 @@ void leFicheiro()
 				i++;
 			}
 			*(info + i) = '\0';
-			ano = atoi(info);
-			if(!verificaData(auxD, ano))
+			meioT = atoi(info);
+			auxV->meioT = meioT;
+			
+			i = 0;
+			c = fgetc(F1);
+			while(c != ';')
 			{
-				printf("Data invalida...");
+				*(info + i) = c;
+				c = fgetc(F1);
+				i++;
 			}
-		}
-		while(!verificaData(auxD, ano));
-		auxV.diaIni = auxD;
-		
-		if(procuraAno(ano) == NULL)
-		{
-			adicionaAno(ano);
-		}
-		auxA = procuraAno(ano);
-		
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
-		{
-			*(info + i) = c;
+			*(info + i) = '\0';
+			kmPercorridos = atoi(info);
+			auxV->kmPercorridos = kmPercorridos;
+			
+			i = 0;
 			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		duracao = atoi(info);
-		auxV.duracao = duracao;
-		
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
-		{
-			*(info + i) = c;
+			while(c != ';')
+			{
+				*(info + i) = c;
+				c = fgetc(F1);
+				i++;
+			}
+			*(info + i) = '\0';
+			custo = atoi(info);
+			auxV->custo = custo;
+			
+			i = 0;
 			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		meioT = atoi(info);
-		auxV.meioT = meioT;
-		
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
-		{
-			*(info + i) = c;
+			while(c != ';')
+			{
+				*(info + i) = c;
+				c = fgetc(F1);
+				i++;
+			}
+			*(info + i) = '\0';
+			memmove(destinoP, info, strlen(info) + 1);
+			destinoP = ajustaMemoria(destinoP, strlen(destinoP));
+			auxV->destinoP = destinoP;
+			
+			i = 0;
 			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		kmPercorridos = atoi(info);
-		auxV.kmPercorridos = kmPercorridos;
-		
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
-		{
-			*(info + i) = c;
-			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		custo = atoi(info);
-		auxV.custo = custo;
-		
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
-		{
-			*(info + i) = c;
-			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		memmove(destinoP, info, strlen(info) + 1);
-		destinoP = ajustaMemoria(destinoP, strlen(destinoP));
-		auxV.destinoP = destinoP;
-		
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';')
-		{
-			*(info + i) = c;
-			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		nCidades = atoi(info);
-		auxV.nCidades = nCidades;
-		
-		auxV.cidades = NULL;		
-		insereCidade(&auxV, NULL);
-		i = 0;
-		c = fgetc(F1);
-		while(c != ';' && c != EOF && c != '\n')
-		{
-			*(info + i) = c;
-			c = fgetc(F1);
-			i++;
-		}
-		*(info + i) = '\0';
-		auxV.cidades->cidade = malloc(strlen(info) * sizeof(char));
-		memmove(auxV.cidades->cidade, info, strlen(info));
-		
-		auxC = auxV.cidades;
-		while(c != EOF && c != '\n')
-		{
-			insereCidade(&auxV, NULL);
-			auxC = auxC->seg;
+			while(c != ';')
+			{
+				*(info + i) = c;
+				c = fgetc(F1);
+				i++;
+			}
+			*(info + i) = '\0';
+			nCidades = atoi(info);
+			auxV->nCidades = nCidades;
+			
+			auxV->cidades = NULL;		
+			insereCidade(auxV, NULL);
 			i = 0;
 			c = fgetc(F1);
 			while(c != ';' && c != EOF && c != '\n')
@@ -622,13 +599,49 @@ void leFicheiro()
 				i++;
 			}
 			*(info + i) = '\0';
-			auxC->cidade = malloc(strlen(info) * sizeof(char));
-			memmove(auxC->cidade, info, strlen(info));
+			auxV->cidades->cidade = malloc(strlen(info) * sizeof(char));
+			memmove(auxV->cidades->cidade, info, strlen(info));
+			
+			auxC = auxV->cidades;
+			while(c != EOF && c != '\n')
+			{
+				insereCidade(auxV, NULL);
+				auxC = auxC->seg;
+				i = 0;
+				c = fgetc(F1);
+				while(c != ';' && c != EOF && c != '\n')
+				{
+					*(info + i) = c;
+					c = fgetc(F1);
+					i++;
+				}
+				*(info + i) = '\0';
+				auxC->cidade = malloc(strlen(info) * sizeof(char));
+				memmove(auxC->cidade, info, strlen(info));
+			}
+			auxV->seg = NULL;
+			auxA->viagens = NULL;
+			insereViagem(auxA, auxV);
+			c = fgetc(F1);
+			pos = ftell(F1);
+			leFicheiro(F1, pos);
 		}
-		
-		auxV.seg = NULL;
-		auxA->viagens = NULL;
-		insereViagem(auxA, &auxV);
+	}
+}
+
+void carregaFicheiro()
+{
+	FILE *F1;
+	long int pos = 0;
+	if(fopen("DiarioViagens.txt", "r") == NULL)
+	{
+		F1 = fopen("DiarioViagens.txt", "w");
+		printf("Como nao foi encontrado nenhum ficheiro com o nome \"DiarioViagens.txt\",\nfoi criado um vazio\n");
+	}
+	else
+	{
+		F1 = fopen("DiarioViagens.txt", "r");
+		leFicheiro(F1, pos);
 		fclose(F1);
 	}
 }
@@ -1251,7 +1264,7 @@ void criaRelatoriof(){ //atençao a ordem alfabetica
 void menu()
 {
 	int o, s = 1;
-	leFicheiro();
+	carregaFicheiro();
 	while(s){
 		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
 		printf("||                                              ||\n");
