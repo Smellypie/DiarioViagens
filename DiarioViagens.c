@@ -56,6 +56,109 @@ void criaCalendario()													//Base da lista
 	calendario -> seg = NULL;
 }
 
+int verificaData(struct Data d, int ano)								//verifica a validade da data (1 - válida, 0 - inválida)
+{
+	if(d.mes < 1 || d.mes > 12)
+	{
+		return 0;
+	}
+	else
+	{
+		if(ano % 4 == 0)	//ano bissexto
+		{
+			switch(d.mes)
+			{
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+				case 8:
+				case 10:
+				case 12:
+				if(d.dia < 1 || d.dia > 31)
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
+				break;
+				
+				case 4:
+				case 6:
+				case 9:
+				case 11:
+				if(d.dia < 1 || d.dia > 30)
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
+				break;
+				
+				default:	//fevereiro
+				if(d.dia < 1 || d.dia > 29)
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
+			}
+		}
+		else     //ano normal
+		{
+			switch(d.mes)
+			{
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+				case 8:
+				case 10:
+				case 12:
+				if(d.dia < 1 || d.dia > 31)
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
+				break;
+				
+				case 4:
+				case 6:
+				case 9:
+				case 11:
+				if(d.dia < 1 || d.dia > 30)
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
+				break;
+				
+				default:	//fevereiro
+				if(d.dia < 1 || d.dia > 28)
+				{
+					return 0;
+				}
+				else
+				{
+					return 1;
+				}
+			}
+		}
+	}
+}
+
 char *ajustaMemoria(char *str, int len)									//cria uma nova string com apenas a memória necessária para str
 {
 	char *novo;
@@ -268,10 +371,20 @@ void criaViagem()
 	
 	F1=fopen("DiarioViagens.txt","a");									//acrecenta no fim do ficheiro
 	
-	printf("Dia de inicio da viagem(dd mm aaaa): \n");
-	scanf("%d%d%d", &dia, &mes, &ano);
-	fflush(stdin);
-	fprintf(F1, "%d;%d;%d;", dia, mes, ano);
+	do
+	{
+		printf("Dia de inicio da viagem(dd mm aaaa): \n");
+		scanf("%d%d%d", &dia, &mes, &ano);
+		fflush(stdin);
+		fprintf(F1, "%d;%d;%d;", dia, mes, ano);
+		auxD.dia = dia;
+		auxD.mes = mes;
+		if(!verificaData(auxD, ano))
+		{
+			printf("Data invalida...\n");
+		}
+	}
+	while(!verificaData(auxD, ano));
 	if(procuraAno(ano) == NULL)
 	{
 		adicionaAno(ano);
