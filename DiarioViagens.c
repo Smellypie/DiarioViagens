@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 #include <assert.h>
 
 struct Cidade
@@ -20,7 +19,8 @@ struct Ano
 {
 	int ano;
 	int despesa;														//despesa total nesse ano
-	int nDestinos;														//número de cidades visitados no total nesse ano
+	int nViagens;														//número de países visitados nesse ano, ou seja, o número de viagens
+	int nDestinos;														//número de cidades visitadas no total nesse ano
 	int kmAviao;														//distância percorrida de avião durante esse ano
 	int kmCarro;														//distância percorrida de carro durante esse ano
 	int diasViagem;														//número total de dias de viagem nesse ano
@@ -60,12 +60,12 @@ char *ajustaMemoria(char *str, int len)									//cria uma nova string com apena
 {
 	char *novo;
 	int i;
-	novo = malloc((len + 1) * sizeof(char));
+	novo = malloc(len * sizeof(char));
 	for(i = 0; i < len; i++)
 	{
 		*(novo + i) = *(str + i);
 	}
-	*(novo + len + 1) = '\0';
+	*(novo + len) = '\0';
 	free(str);
 	return novo;
 }
@@ -84,7 +84,7 @@ void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os va
 		ano->kmCarro += viagem->kmPercorridos;
 	}
 	ano->diasViagem += viagem->duracao;
-
+	
 	calendario->despesa += viagem->custo;
 	calendario->nViagens++;
 	calendario->nDestinos += viagem->nCidades;
@@ -138,18 +138,25 @@ void adicionaAno(int ano)												//Cria a struct de um novo ano
 struct Ano *procuraAno(int ano)											//verifica se determinado ano já está criado
 {
 	struct Ano *aux;
-	aux = calendario;
-	while(aux -> ano != ano && aux != NULL)
-	{
-		aux = aux -> seg;
-	}
-	if(aux == NULL)
+	if(calendario->seg == NULL)
 	{
 		return NULL;
 	}
 	else
 	{
-		return aux;
+		aux = calendario->seg;
+		while(aux->seg != NULL && aux->ano != ano)
+		{
+			aux = aux -> seg;
+		}
+		if(aux->ano == ano)
+		{
+			return aux;
+		}
+		else
+		{
+			return NULL;
+		}
 	}
 }
 
@@ -215,9 +222,9 @@ void insereCidade(struct Viagem *viagem, char *c)
 void insereViagem(struct Ano *ano, struct Viagem *viagem)				//Insere viagem criada na lista de viagens ordenadas cronologicamente do respetivo ano
 {
 	struct Viagem *aux;
-	if(ano -> viagens == NULL)
+	if(ano->viagens == NULL)
 	{
-		ano -> viagens = viagem;
+		ano->viagens = viagem;
 	}
 	else
 	{
@@ -254,60 +261,17 @@ void criaViagem()
 	struct Data auxD;
 	struct Ano *auxA;
 	struct Viagem *auxV;
-
+	
 	auxV = malloc(sizeof(struct Viagem));
 	destinoP = malloc(50*sizeof(char));
 	cidade = malloc(50*sizeof(char));
-
+	
 	F1=fopen("DiarioViagens.txt","a");									//acrecenta no fim do ficheiro
-	fprintf(F1, "\n");													//nao sei se é preciso temos de testar
-
+	
 	printf("Dia de inicio da viagem(dd mm aaaa): \n");
 	scanf("%d%d%d", &dia, &mes, &ano);
 	fflush(stdin);
 	fprintf(F1, "%d;%d;%d;", dia, mes, ano);
-
-	printf("Duracao da viagem(em dias): \n");
-	scanf("%d", &duracao);
-	fflush(stdin);
-	fprintf(F1, "%d;", duracao);
-
-	printf("Meio de transporte usado:\n1 - Aviao\n2 - Carro\n");
-	scanf("%d", &meioT);
-	fflush(stdin);
-	fprintf(F1, "%d;", meioT);
-
-	printf("Distancia percorrida durante a viagem(em quilometros): ");
-	scanf("%d", &kmPercorridos);
-	fflush(stdin);
-	fprintf(F1, "%d;", kmPercorridos);
-
-	printf("Custo total da viagem(em euros): ");
-	scanf("%d", &custo);
-	fflush(stdin);
-	fprintf(F1, "%d;", custo);
-
-	printf("Destino da viagem\nPais: ");
-	scanf("%s", destinoP);
-	fflush(stdin);
-	destinoP = ajustaMemoria(destinoP, strlen(destinoP));
-	fprintf(F1, "%s;", destinoP);
-
-	printf("Numero de cidades visitadas: ");
-	scanf("%d", &nCidades);
-	fflush(stdin);
-	fprintf(F1, "%d", nCidades);
-
-	for(i = 0; i < nCidades; i++)
-	{
-		printf("Cidade numero %d: ", i + 1);
-		scanf("%s", cidade);
-		fflush(stdin);
-		fprintf(F1, ";%s", cidade);
-	}
-
-	fclose(F1);
-
 	if(procuraAno(ano) == NULL)
 	{
 		adicionaAno(ano);
@@ -316,15 +280,60 @@ void criaViagem()
 	auxD.dia = dia;
 	auxD.mes = mes;
 	auxV -> diaIni = auxD;
-	auxV -> destinoP = destinoP;
+	
+	printf("Duracao da viagem(em dias): \n");
+	scanf("%d", &duracao);
+	fflush(stdin);
+	fprintf(F1, "%d;", duracao);
 	auxV -> duracao = duracao;
+	
+	printf("Meio de transporte usado:\n1 - Aviao\n2 - Carro\n");
+	scanf("%d", &meioT);
+	fflush(stdin);
+	fprintf(F1, "%d;", meioT);
 	auxV -> meioT = meioT;
+	
+	printf("Distancia percorrida durante a viagem(em quilometros): ");
+	scanf("%d", &kmPercorridos);
+	fflush(stdin);
+	fprintf(F1, "%d;", kmPercorridos);
 	auxV -> kmPercorridos = kmPercorridos;
+	
+	printf("Custo total da viagem(em euros): ");
+	scanf("%d", &custo);
+	fflush(stdin);
+	fprintf(F1, "%d;", custo);
 	auxV -> custo = custo;
+	
+	printf("Destino da viagem\nPais: ");
+	scanf("%s", destinoP);
+	fflush(stdin);
+	destinoP = ajustaMemoria(destinoP, strlen(destinoP));
+	fprintf(F1, "%s;", destinoP);
+	auxV -> destinoP = destinoP;
+	
+	printf("Numero de cidades visitadas: ");
+	scanf("%d", &nCidades);
+	fflush(stdin);
+	fprintf(F1, "%d", nCidades);
+	auxV->nCidades = nCidades;
+	
+	auxV->cidades = NULL;
+	for(i = 0; i < nCidades; i++)
+	{
+		printf("Cidade numero %d: ", i + 1);
+		scanf("%s", cidade);
+		fflush(stdin);
+		fprintf(F1, ";%s", cidade);
+		insereCidade(auxV, cidade);
+	}
+	
+	fprintf(F1, "\n");
+	fclose(F1);
+	
 	auxV -> seg = NULL;
 	actualizaDados(auxA, auxV);
 	insereViagem(auxA, auxV);
-
 }
 
 void leFicheiro()
@@ -336,11 +345,11 @@ void leFicheiro()
 	struct Data auxD;
 	struct Ano *auxA;
 	struct Viagem auxV;
-
+	
 	auxA = malloc(sizeof(struct Ano));
 	destinoP = malloc(50 * sizeof(char));
 	info = malloc(50 * sizeof(char));
-
+	
 	if(fopen("DiarioViagens.txt", "r") == NULL)
 	{
 		F1 = fopen("DiarioViagens.txt", "w");
@@ -360,7 +369,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		dia = atoi(info);
 		auxD.dia = dia;
-
+		
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -373,7 +382,7 @@ void leFicheiro()
 		mes = atoi(info);
 		auxD.mes = mes;
 		auxV.diaIni = auxD;
-
+		
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -389,7 +398,7 @@ void leFicheiro()
 			adicionaAno(ano);
 		}
 		auxA = procuraAno(ano);
-
+		
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -401,7 +410,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		duracao = atoi(info);
 		auxV.duracao = duracao;
-
+		
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -413,7 +422,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		meioT = atoi(info);
 		auxV.meioT = meioT;
-
+		
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -425,7 +434,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		kmPercorridos = atoi(info);
 		auxV.kmPercorridos = kmPercorridos;
-
+		
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -437,7 +446,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		custo = atoi(info);
 		auxV.custo = custo;
-
+		
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -450,7 +459,7 @@ void leFicheiro()
 		memmove(destinoP, info, strlen(info) + 1);
 		destinoP = ajustaMemoria(destinoP, strlen(destinoP));
 		auxV.destinoP = destinoP;
-
+		
 		i = 0;
 		c = fgetc(F1);
 		while(c != ';')
@@ -462,8 +471,8 @@ void leFicheiro()
 		*(info + i) = '\0';
 		nCidades = atoi(info);
 		auxV.nCidades = nCidades;
-
-		auxV.cidades = NULL;
+		
+		auxV.cidades = NULL;		
 		insereCidade(&auxV, NULL);
 		i = 0;
 		c = fgetc(F1);
@@ -476,7 +485,7 @@ void leFicheiro()
 		*(info + i) = '\0';
 		auxV.cidades->cidade = malloc(strlen(info) * sizeof(char));
 		memmove(auxV.cidades->cidade, info, strlen(info));
-
+		
 		auxC = auxV.cidades;
 		while(c != EOF && c != '\n')
 		{
@@ -494,7 +503,7 @@ void leFicheiro()
 			auxC->cidade = malloc(strlen(info) * sizeof(char));
 			memmove(auxC->cidade, info, strlen(info));
 		}
-
+		
 		auxV.seg = NULL;
 		auxA->viagens = NULL;
 		insereViagem(auxA, &auxV);
@@ -664,8 +673,6 @@ int contaCidadesAno(struct Ano *corrente){
 
 
 
-
-
 int imprimePaises(){
 	int jaexiste;
 	int conta;
@@ -707,6 +714,7 @@ int imprimePaises(){
 		}
 	return conta;
 	}
+	
 int contaPaises(){
 	int jaexiste;
 	int conta;
@@ -962,7 +970,7 @@ void consultaInformacao(){
 
 	printf("Países:\n");
 	k=imprimePaises();
-
+	imprimePaises();
 	printf("Total de países: %d\n", k);
 
 	printf("Total de países por ano: \n" );
@@ -1102,7 +1110,7 @@ void criaRelatorioe(){ //atençao a ordem alfabetica
 
 	}
 
-
+/*
 void criaRelatoriof(){ //atençao a ordem alfabetica
 	char *data;
 	char *ficheiro;
@@ -1116,7 +1124,7 @@ void criaRelatoriof(){ //atençao a ordem alfabetica
 
 
 	}
-
+*/
 
 void menu()
 {
@@ -1124,16 +1132,16 @@ void menu()
 	leFicheiro();
 	while(s){
 		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-		printf("||												||\n");
-		printf("||				Diario de Viagens				||\n");
-		printf("||												||\n");
-		printf("||		1 - Adiciona viagem						||\n");
-		printf("||		2 - Consultar informacao				||\n");
-		printf("||		3 - Consultar informação percentual		||\n");
-		printf("||		4 - Criar relatorio	(ecra)				||\n"); // dos países onde visitou mais cidades e onde gastou mais dinheiro
-		printf("||		5 - Criar relatorio	(ficheiro)			||\n");
-		printf("||		6 - Sair								||\n");
-		printf("||												||\n");
+		printf("||                                              ||\n");
+		printf("||              Diario de Viagens               ||\n");
+		printf("||                                              ||\n");
+		printf("||      1 - Adiciona viagem                     ||\n");
+		printf("||      2 - Consultar informacao                ||\n");
+		printf("||      3 - Consultar informacao percentual     ||\n");
+		printf("||      4 - Criar relatorio (ecra)              ||\n"); // dos países onde visitou mais cidades e onde gastou mais dinheiro
+		printf("||      5 - Criar relatorio (ficheiro)          ||\n");
+		printf("||      6 - Sair                                ||\n");
+		printf("||                                              ||\n");
 		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
 		scanf("%d", &o);
 		if(s != 0){
@@ -1156,11 +1164,11 @@ void menu()
 				break;
 
 				case 4:
-				criaRelatorioe();
+				//criaRelatorioe();
 				break;
 
 				case 5:
-				criaRelatoriof();
+				//criaRelatoriof();
 				break;
 
 				case 6:
@@ -1171,14 +1179,13 @@ void menu()
 				default:
 				printf("Parametro invalido...");
 			}
-
-
-			}
+		}
 	}
 }
 
 int main()
 {
+	criaCalendario();
 	menu();
 	return 0;
 }
