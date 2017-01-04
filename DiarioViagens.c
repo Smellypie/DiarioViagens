@@ -622,7 +622,6 @@ void leFicheiro(FILE *F1, long int pos)
 			auxV->seg = NULL;
 			auxA->viagens = NULL;
 			insereViagem(auxA, auxV);
-			c = fgetc(F1);
 			pos = ftell(F1);
 			leFicheiro(F1, pos);
 		}
