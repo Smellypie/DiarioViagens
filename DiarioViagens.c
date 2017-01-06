@@ -1036,6 +1036,189 @@ void consultaPercentagens()
 	printf("\nValor percentual dos dias de viagem por ano:\n");
 	imprimeDiasViagemAnoPercentagem(calendario->diasViagem);
 }
+
+float media(float a, float b){
+	return (a/b);
+	}
+	
+	
+struct Cidade *criaCidade(){
+	
+	struct Cidade *auxC;
+	
+	auxC = malloc (sizeof(struct Cidade));
+	
+	return auxC;
+	
+	}
+
+void criaRelatorioE(){ //atençao a ordem alfabetica
+	struct Ano *auxA;
+	struct Viagem *auxV;
+	struct Viagem *auxV2;
+	struct Viagem *listaP; //lista de paises
+	struct Cidade *auxC;
+	struct Cidade *auxC2;
+	struct Cidade *auxC4;
+	char *paises;
+	int *indices;
+	int a, b, i, j, jaexiste, contador;
+	a = 0;
+	b = 0;
+	i = 0;
+	j = 0;
+	jaexiste = 0;
+	
+	paises = malloc(200 * sizeof(char));
+	indices = malloc(20 * sizeof(int));
+	listaP = malloc (sizeof(struct Viagem));
+	auxC = malloc (sizeof(struct Cidade));
+	
+	listaP->cidades=auxC;
+	auxC->seg=NULL;
+	
+	
+	*indices = 0;
+	for(auxA = calendario->seg; auxA != NULL; auxA = auxA -> seg)
+	{
+		printf("1");
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg)
+		{
+			printf("2");
+			if(!jaExiste(paises, indices, auxV->destinoP, i))
+			{
+				printf("3");
+				memcpy(paises + j, auxV->destinoP, strlen(auxV->destinoP));
+				j += strlen(auxV->destinoP);
+				*(paises + j) = '\0';
+				j++;
+				i++;
+				*(indices + i) = j;
+			}
+		}
+	}
+	printf("4");
+	printf("%d", i);
+	auxV = listaP;
+	for(j = 0; j != i; j++)
+	{
+		printf("%d", j);
+		auxV -> destinoP = malloc(60*sizeof(char));
+		strcpy(auxV -> destinoP,paises + *(indices + j));
+		printf("s");
+		auxV2 = malloc(sizeof(struct Viagem));
+		printf("s");
+		auxV2 -> seg = NULL;
+		printf("s");
+		auxV2 -> destinoP = "Dummy";
+		printf("s");
+		auxV -> seg = auxV2;
+		printf("s");
+		auxV = auxV -> seg;
+		printf("s");
+	}
+	
+	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+	{
+		auxV -> cidades = malloc(sizeof(struct Cidade));
+		auxV -> cidades -> seg = NULL;
+		auxV -> cidades -> cidade = malloc(50*sizeof(char));
+	}
+	
+	
+	
+	
+	
+	
+	for(auxV2 = listaP; auxV2 != NULL; auxV2= auxV2 -> seg){
+		printf("%s",auxV2->destinoP);}
+		
+	for(auxA = calendario->seg; auxA != NULL; auxA = auxA -> seg)
+	{
+		printf("5");
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg)
+		{
+			printf("6");
+			for(auxV2 = listaP; auxV2 != NULL; auxV2= auxV2 -> seg)
+			{
+				printf("7");
+				if(strcmp(auxV -> destinoP, auxV2 -> destinoP) == 0)
+				{
+					printf("8");
+					for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg)
+					{
+						printf("9");
+						for(auxC2 = auxV2 -> cidades; auxC2 != NULL; auxC2 = auxC2 -> seg)
+						{
+							printf("10");
+							if(strcmp(auxC -> cidade, auxC2 -> cidade) == 0)
+							{
+								printf("11");
+								jaexiste = 1;
+							}
+							auxC4=auxC2;
+						}
+						if(jaexiste != 1)
+						{
+							printf("12");
+							auxC4 -> seg = criaCidade();
+							printf("13a");
+							strcpy(auxC4 -> cidade, auxC -> cidade);
+							printf("13s");
+							strcpy(auxC4 -> seg -> cidade, "Dummy");
+							printf("13d");
+							auxC4 -> seg -> seg = NULL;
+							printf("13h");
+						}
+						else
+						{
+							printf("13");
+							jaexiste = 0;
+						}
+					}
+				}
+			}
+		}	
+	}
+	printf("ftjcv");
+	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+	{
+		printf("13");
+		contador =0;
+		for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg)
+		{
+			printf("%d",contador);
+			contador++;
+		}
+		auxV -> nCidades = contador;
+		printf("%d",auxV -> nCidades);
+	}
+	
+	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+	{
+		a = a + auxV -> nCidades;
+		b++;
+	}
+	
+	a = media(a, b);		//a passa a ter o valor da media
+	
+	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+	{
+		if(auxV -> nCidades >= (int)a)
+		{
+			printf("%s", auxV -> destinoP);
+		}
+	}
+	
+	free(paises);
+	free(indices);
+	free(auxV2);
+
+
+	}
+	
+
+
 /*
 void criaRelatorioe(){ //atençao a ordem alfabetica
 
@@ -1094,7 +1277,7 @@ void menu()
 			break;
 
 			case 4:
-			//criaRelatorioe();
+			criaRelatorioE();
 			fflush(stdin);
 			printf("Clique ENTER para continuar...");
 			getchar();
