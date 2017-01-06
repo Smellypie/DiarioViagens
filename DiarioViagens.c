@@ -47,7 +47,7 @@ struct Ano *calendario;													//os dados desta struct são os totais
 void criaCalendario()													//Base da lista
 {
 	calendario = malloc(sizeof(struct Ano));
-	calendario->despesa = 0;
+	calendario->despesa = 0;											//inicialização da base com todos os valores iguais a 0
 	calendario->nDestinos = 0;
 	calendario->kmAviao = 0;
 	calendario->kmCarro = 0;
@@ -166,12 +166,12 @@ char *ajustaMemoria(char *str, int len)									//cria uma nova string com apena
 	char *novo;
 	int i;
 	novo = malloc(len * sizeof(char));
-	for(i = 0; i < len; i++)
+	for(i = 0; i < len; i++)											//passa o conteúdo de str para novo
 	{
 		*(novo + i) = *(str + i);
 	}
 	*(novo + len) = '\0';
-	free(str);
+	free(str);															//apaga str
 	return novo;
 }
 
@@ -180,7 +180,7 @@ void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os va
 	ano->despesa += viagem->custo;
 	ano->nViagens++;
 	ano->nDestinos += viagem->nCidades;
-	if(viagem->meioT == 1)
+	if(viagem->meioT == 1)												//verifica o meio de transporte usado
 	{
 		ano->kmAviao += viagem->kmPercorridos;
 	}
@@ -197,13 +197,17 @@ void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os va
 	calendario->despesa += viagem->custo;
 	calendario->nViagens++;
 	calendario->nDestinos += viagem->nCidades;
-	if(viagem->meioT == 1)
+	if(viagem->meioT == 1)												//verifica o meio de transporte usado
 	{
 		calendario->kmAviao += viagem->kmPercorridos;
 	}
 	if(viagem->meioT == 2)
 	{
 		calendario->kmCarro += viagem->kmPercorridos;
+	}
+	if(viagem->meioT == 3)
+	{
+		calendario->kmComboio += viagem->kmPercorridos;
 	}
 	calendario->diasViagem += viagem->duracao;
 }
@@ -212,7 +216,7 @@ void adicionaAno(int ano)												//Cria a struct de um novo ano
 {
 	struct Ano *novo, *aux;
 	novo = malloc(sizeof(struct Ano));
-	novo->despesa = 0;
+	novo->despesa = 0;													//inicialização da struct Ano com todos os valores iguais a 0
 	novo->nViagens = 0;
 	novo->nDestinos = 0;
 	novo->kmAviao = 0;
@@ -380,7 +384,7 @@ void criaViagem()
 	
 	do
 	{
-		printf("\nDia de inicio da viagem(dd mm aaaa): ");
+		printf("Dia de inicio da viagem(dd mm aaaa): \n");
 		scanf("%d%d%d", &dia, &mes, &ano);
 		fflush(stdin);
 		auxD.dia = dia;
@@ -399,38 +403,38 @@ void criaViagem()
 	fprintf(F1, "%d;%d;%d;", dia, mes, ano);
 	auxV -> diaIni = auxD;
 	
-	printf("\nDuracao da viagem(em dias): ");
+	printf("Duracao da viagem(em dias): \n");
 	scanf("%d", &duracao);
 	fflush(stdin);
 	fprintf(F1, "%d;", duracao);
 	auxV -> duracao = duracao;
 	
-	printf("\nMeio de transporte usado:\n1 - Aviao\n2 - Carro\n3 - Comboio\n\nOPCAO:");
+	printf("Meio de transporte usado:\n1 - Aviao\n2 - Carro\n3 - Comboio\n");
 	scanf("%d", &meioT);
 	fflush(stdin);
 	fprintf(F1, "%d;", meioT);
 	auxV -> meioT = meioT;
 	
-	printf("\nDistancia percorrida durante a viagem(em quilometros): ");
+	printf("Distancia percorrida durante a viagem(em quilometros): ");
 	scanf("%d", &kmPercorridos);
 	fflush(stdin);
 	fprintf(F1, "%d;", kmPercorridos);
 	auxV -> kmPercorridos = kmPercorridos;
 	
-	printf("\nCusto total da viagem(em euros): ");
+	printf("Custo total da viagem(em euros): ");
 	scanf("%d", &custo);
 	fflush(stdin);
 	fprintf(F1, "%d;", custo);
 	auxV -> custo = custo;
 	
-	printf("\n\tDestino da viagem\nPais: ");
+	printf("Destino da viagem\nPais: ");
 	scanf("%s", destinoP);
 	fflush(stdin);
 	destinoP = ajustaMemoria(destinoP, strlen(destinoP));
 	fprintf(F1, "%s;", destinoP);
 	auxV -> destinoP = destinoP;
 	
-	printf("\nNumero de cidades visitadas: ");
+	printf("Numero de cidades visitadas: ");
 	scanf("%d", &nCidades);
 	fflush(stdin);
 	fprintf(F1, "%d", nCidades);
@@ -439,7 +443,7 @@ void criaViagem()
 	auxV->cidades = NULL;
 	for(i = 0; i < nCidades; i++)
 	{
-		printf("\nCidade numero %d: ", i + 1);
+		printf("Cidade numero %d: ", i + 1);
 		scanf("%s", cidade);
 		fflush(stdin);
 		fprintf(F1, ";%s", cidade);
@@ -1037,22 +1041,61 @@ void consultaPercentagens()
 	imprimeDiasViagemAnoPercentagem(calendario->diasViagem);
 }
 
-float media(float a, float b){
-	return (a/b);
-	}
-	
-	
-struct Cidade *criaCidade(){
-	
+struct Cidade *criaCidade()
+{
 	struct Cidade *auxC;
 	
 	auxC = malloc (sizeof(struct Cidade));
 	
 	return auxC;
 	
+}
+
+void freeCidade(struct Cidade *cidade)
+{
+	struct Cidade *aux1;
+	struct Cidade *aux2;
+
+	//Dar free a todos os locais de memoria, comecando do fim para o inicio
+	while(cidade->seg!=NULL)
+	{
+		aux1=cidade;
+		while(aux1->seg!=NULL)
+		{
+			aux2=aux1;
+			aux1=aux1->seg;
+		}
+		free(aux1);
+		aux2->seg=NULL;
 	}
 
-void criaRelatorioE(){ //atençao a ordem alfabetica
+	free(cidade);
+}
+
+void freeViagem(struct Viagem *viagem)
+{
+	struct Viagem *aux1;
+	struct Viagem *aux2;
+	
+	//Dar free a todos os locais de memoria, comecando do fim para o inicio
+	while(viagem->seg!=NULL)
+	{
+		aux1=viagem;
+		while(aux1->seg!=NULL)
+		{
+			aux2=aux1;
+			aux1=aux1->seg;
+		}
+		free(aux1);
+		freeCidade(aux1->cidades);
+		aux2->seg=NULL;
+	}
+
+	//da free a primeira posicao de memoria
+	free(viagem);
+}
+
+void criaRelatorioE(int o){ //atençao a ordem alfabetica
 	struct Ano *auxA;
 	struct Viagem *auxV;
 	struct Viagem *auxV2;
@@ -1061,14 +1104,23 @@ void criaRelatorioE(){ //atençao a ordem alfabetica
 	struct Cidade *auxC2;
 	struct Cidade *auxC4;
 	char *paises;
+	char *data;
+	char *ficheiro;
+	FILE *fp;
 	int *indices;
-	int a, b, i, j, jaexiste, contador;
+	int  i, j, jaexiste, contador;
+	float a, b, c;
+	a=0;
+	b=0;
 	a = 0;
 	b = 0;
+	c = 0;
 	i = 0;
 	j = 0;
 	jaexiste = 0;
 	
+	ficheiro= malloc(50 * sizeof(char));
+	data = malloc(20 * sizeof(char));
 	paises = malloc(200 * sizeof(char));
 	indices = malloc(20 * sizeof(int));
 	listaP = malloc (sizeof(struct Viagem));
@@ -1076,18 +1128,14 @@ void criaRelatorioE(){ //atençao a ordem alfabetica
 	
 	listaP->cidades=auxC;
 	auxC->seg=NULL;
-	
-	
+
 	*indices = 0;
-	for(auxA = calendario->seg; auxA != NULL; auxA = auxA -> seg)
+	for(auxA = calendario->seg; auxA != NULL; auxA = auxA -> seg)					//ano a ano
 	{
-		printf("1");
-		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg)
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg)				//viagem a viagem
 		{
-			printf("2");
-			if(!jaExiste(paises, indices, auxV->destinoP, i))
+			if(!jaExiste(paises, indices, auxV->destinoP, i))						//"matriz" do luis
 			{
-				printf("3");
 				memcpy(paises + j, auxV->destinoP, strlen(auxV->destinoP));
 				j += strlen(auxV->destinoP);
 				*(paises + j) = '\0';
@@ -1097,145 +1145,150 @@ void criaRelatorioE(){ //atençao a ordem alfabetica
 			}
 		}
 	}
-	printf("4");
-	printf("%d", i);
 	auxV = listaP;
-	for(j = 0; j != i; j++)
+	for(j = 0; j != i; j++)															//Inserir os países	na listaP			
 	{
-		printf("%d", j);
 		auxV -> destinoP = malloc(60*sizeof(char));
 		strcpy(auxV -> destinoP,paises + *(indices + j));
-		printf("s");
 		auxV2 = malloc(sizeof(struct Viagem));
-		printf("s");
 		auxV2 -> seg = NULL;
-		printf("s");
 		auxV2 -> destinoP = "Dummy";
-		printf("s");
 		auxV -> seg = auxV2;
-		printf("s");
 		auxV = auxV -> seg;
-		printf("s");
 	}
 	
-	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)							//Inicializar o struct cidade da listaP
 	{
+		auxV -> custo = 0;//Inicializar o custo a zero
 		auxV -> cidades = malloc(sizeof(struct Cidade));
 		auxV -> cidades -> seg = NULL;
 		auxV -> cidades -> cidade = malloc(50*sizeof(char));
 	}
 	
-	
-	
-	
-	
-	
-	for(auxV2 = listaP; auxV2 != NULL; auxV2= auxV2 -> seg){
-		printf("%s",auxV2->destinoP);}
-		
-	for(auxA = calendario->seg; auxA != NULL; auxA = auxA -> seg)
+	for(auxA = calendario->seg; auxA != NULL; auxA = auxA -> seg)//ano a ano
 	{
-		printf("5");
-		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg)
+		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg)//viagem a viagem
 		{
-			printf("6");
-			for(auxV2 = listaP; auxV2 != NULL; auxV2= auxV2 -> seg)
+			for(auxV2 = listaP; auxV2 != NULL; auxV2= auxV2 -> seg)//para cada viagem analisa a listaP
 			{
-				printf("7");
-				if(strcmp(auxV -> destinoP, auxV2 -> destinoP) == 0)
+				if(strcmp(auxV -> destinoP, auxV2 -> destinoP) == 0)//se o nome do pais na lista for igual ao nome do pais da viagem
 				{
-					printf("8");
-					for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg)
+					auxV2->custo=auxV2->custo + auxV->custo;//adicionar o custo da viagem ao custo total desse pais
+					for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg)//adicionar cidade da viagem a ao pais da listaP
 					{
-						printf("9");
-						for(auxC2 = auxV2 -> cidades; auxC2 != NULL; auxC2 = auxC2 -> seg)
+						for(auxC2 = auxV2 -> cidades; auxC2 != NULL; auxC2 = auxC2 -> seg)//ver todas as cidades ja existentes nesse pais da listaP
 						{
-							printf("10");
-							if(strcmp(auxC -> cidade, auxC2 -> cidade) == 0)
+						
+							if(strcmp(auxC -> cidade, auxC2 -> cidade) == 0)//se esse pais ja existir não faz nada
 							{
-								printf("11");
 								jaexiste = 1;
 							}
-							auxC4=auxC2;
+							auxC4=auxC2;//ponteiro anterior
 						}
-						if(jaexiste != 1)
+						if(jaexiste != 1)//como o pais nao existe, addiciona-o ao struct Cidade dessa lista p
 						{
-							printf("12");
-							auxC4 -> seg = criaCidade();
-							printf("13a");
+							auxC4 -> seg = malloc(sizeof(struct Cidade));
+							auxC4->seg->cidade = malloc(20*sizeof(char));
 							strcpy(auxC4 -> cidade, auxC -> cidade);
-							printf("13s");
 							strcpy(auxC4 -> seg -> cidade, "Dummy");
-							printf("13d");
 							auxC4 -> seg -> seg = NULL;
-							printf("13h");
 						}
 						else
 						{
-							printf("13");
 							jaexiste = 0;
 						}
+						
 					}
 				}
 			}
 		}	
 	}
-	printf("ftjcv");
-	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+	
+	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)//olhando para todos os paises da listaP
 	{
-		printf("13");
-		contador =0;
-		for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg)
+		contador = 0;
+		for(auxC = auxV -> cidades; auxC != NULL; auxC = auxC -> seg)//Olhando para todas as cidades
 		{
-			printf("%d",contador);
-			contador++;
+			if(strcmp(auxC->cidade, "Dummy") != 0)//Conta todas as cidades válidas
+			{
+				contador++;
+			}
 		}
-		auxV -> nCidades = contador;
-		printf("%d",auxV -> nCidades);
+		auxV -> nCidades = contador;//Guarda quantas cidades foram visitadas nesse pais
 	}
 	
-	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)//olhando para todos os paises da listaP
 	{
-		a = a + auxV -> nCidades;
-		b++;
-	}
-	
-	a = media(a, b);		//a passa a ter o valor da media
-	
-	for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
-	{
-		if(auxV -> nCidades >= (int)a)
+		if(strcmp(auxV->destinoP, "Dummy")!=0) //Para todos os países válidos
 		{
-			printf("%s", auxV -> destinoP);
+			c = c + auxV -> custo;		//soma o custo
+			a = a + auxV -> nCidades;	//soma o numero de cidades
+			b++;
 		}
 	}
 	
+	a = a / b;		//a passa a ter o valor da media de cidades
+	c = c / b;		//a passa a ter o valor da media do custo
+	
+	if(o==1)
+	{
+		printf("Paises onde visitou mais cidades:\n");
+		for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+		{
+			if(auxV -> nCidades >= a && strcmp(auxV->destinoP, "Dummy")!=0)//Para todos os paises válidos
+			{
+				printf("%s\n", auxV -> destinoP);
+			}
+		}
+		
+		printf("Paises onde se gastou mais dinheiro:\n");
+		for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+		{
+			if(auxV -> custo >= c && strcmp(auxV->destinoP, "Dummy")!=0)//Para todos os paises válidos
+			{
+				printf("%s\n", auxV -> destinoP);
+			}
+		}
+		
+	}
+	
+	if(o==2)
+	{
+		printf("Introduza a data atual (Relatorio_\"data\"): \n");
+		scanf("%s", data);
+		sprintf(ficheiro,"Relatorio_%s.txt",data);
+		fp=fopen(ficheiro,"w");
+		
+		fprintf(fp,"Paises onde visitou mais cidades:\n");
+		for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+		{
+			if(auxV -> nCidades >= a && strcmp(auxV->destinoP, "Dummy")!=0)//Para todos os paises válidos
+			{
+				fprintf(fp,"%s\n", auxV -> destinoP);
+			}
+		}
+		
+		fprintf(fp,"Paises onde se gastou mais dinheiro:\n");
+		for(auxV = listaP; auxV != NULL; auxV = auxV -> seg)
+		{
+			if(auxV -> custo >= c && strcmp(auxV->destinoP, "Dummy")!=0)//Para todos os paises válidos
+			{
+				fprintf(fp,"%s\n", auxV -> destinoP);
+			}
+		}
+		fclose(fp);
+	}
+	
+	
+	
+
+	freeViagem(listaP);
 	free(paises);
 	free(indices);
 	free(auxV2);
-
-
-	}
 	
-
-
-/*
-void criaRelatorioe(){ //atençao a ordem alfabetica
-
-
-
 	}
 
-void criaRelatoriof(){ //atençao a ordem alfabetica
-	char *data;
-	char *ficheiro;
-	FILE *fp;
-	printf("Introduza a data atual (dd mm aaaa): \n");
-	scanf("%s", data);
-	sprintf(ficheiro,"Relatorio%s.txt",data);
-	fp=fopen(ficheiro,"w");
-}
-*/
 void menu()
 {
 	int o, s = 1;
@@ -1252,7 +1305,6 @@ void menu()
 		printf("||      6 - Sair                                ||\n");
 		printf("||                                              ||\n");
 		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
-		printf("OPCAO:");
 		scanf("%d", &o);
 		switch(o)
 		{
@@ -1278,14 +1330,14 @@ void menu()
 			break;
 
 			case 4:
-			criaRelatorioE();
+			criaRelatorioE(1);
 			fflush(stdin);
 			printf("Clique ENTER para continuar...");
 			getchar();
 			break;
 
 			case 5:
-			//criaRelatoriof();
+			criaRelatorioE(2);
 			fflush(stdin);
 			printf("Clique ENTER para continuar...");
 			getchar();
