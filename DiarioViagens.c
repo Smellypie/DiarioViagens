@@ -660,7 +660,6 @@ int percentagem(int a, int b)
 	int res;
 	if(b == 0)
 	{ //se "a" ou "b" forem iguais a zero
-		printf("PORQUE\n");
 		return -1;
 	}
 	else
