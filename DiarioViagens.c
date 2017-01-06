@@ -1305,6 +1305,7 @@ void menu()
 		printf("||                                              ||\n");
 		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
 		scanf("%d", &o);
+		system("cls");
 		switch(o)
 		{
 			case 1:
@@ -1312,6 +1313,7 @@ void menu()
 			fflush(stdin);
 			printf("Clique ENTER para continuar...");
 			getchar();
+			system("cls");
 			break;
 
 			case 2:
@@ -1319,6 +1321,7 @@ void menu()
 			fflush(stdin);
 			printf("Clique ENTER para continuar...");
 			getchar();
+			system("cls");
 			break;
 
 			case 3:
@@ -1326,6 +1329,7 @@ void menu()
 			fflush(stdin);
 			printf("Clique ENTER para continuar...");
 			getchar();
+			system("cls");
 			break;
 
 			case 4:
@@ -1333,6 +1337,7 @@ void menu()
 			fflush(stdin);
 			printf("Clique ENTER para continuar...");
 			getchar();
+			system("cls");
 			break;
 
 			case 5:
@@ -1340,6 +1345,7 @@ void menu()
 			fflush(stdin);
 			printf("Clique ENTER para continuar...");
 			getchar();
+			system("cls");
 			break;
 
 			case 6:
