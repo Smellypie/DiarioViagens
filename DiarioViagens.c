@@ -380,7 +380,7 @@ void criaViagem()
 	
 	do
 	{
-		printf("Dia de inicio da viagem(dd mm aaaa): \n");
+		printf("\nDia de inicio da viagem(dd mm aaaa): ");
 		scanf("%d%d%d", &dia, &mes, &ano);
 		fflush(stdin);
 		auxD.dia = dia;
@@ -399,38 +399,38 @@ void criaViagem()
 	fprintf(F1, "%d;%d;%d;", dia, mes, ano);
 	auxV -> diaIni = auxD;
 	
-	printf("Duracao da viagem(em dias): \n");
+	printf("\nDuracao da viagem(em dias): ");
 	scanf("%d", &duracao);
 	fflush(stdin);
 	fprintf(F1, "%d;", duracao);
 	auxV -> duracao = duracao;
 	
-	printf("Meio de transporte usado:\n1 - Aviao\n2 - Carro\n3 - Comboio\n");
+	printf("\nMeio de transporte usado:\n1 - Aviao\n2 - Carro\n3 - Comboio\n\nOPCAO:");
 	scanf("%d", &meioT);
 	fflush(stdin);
 	fprintf(F1, "%d;", meioT);
 	auxV -> meioT = meioT;
 	
-	printf("Distancia percorrida durante a viagem(em quilometros): ");
+	printf("\nDistancia percorrida durante a viagem(em quilometros): ");
 	scanf("%d", &kmPercorridos);
 	fflush(stdin);
 	fprintf(F1, "%d;", kmPercorridos);
 	auxV -> kmPercorridos = kmPercorridos;
 	
-	printf("Custo total da viagem(em euros): ");
+	printf("\nCusto total da viagem(em euros): ");
 	scanf("%d", &custo);
 	fflush(stdin);
 	fprintf(F1, "%d;", custo);
 	auxV -> custo = custo;
 	
-	printf("Destino da viagem\nPais: ");
+	printf("\n\tDestino da viagem\nPais: ");
 	scanf("%s", destinoP);
 	fflush(stdin);
 	destinoP = ajustaMemoria(destinoP, strlen(destinoP));
 	fprintf(F1, "%s;", destinoP);
 	auxV -> destinoP = destinoP;
 	
-	printf("Numero de cidades visitadas: ");
+	printf("\nNumero de cidades visitadas: ");
 	scanf("%d", &nCidades);
 	fflush(stdin);
 	fprintf(F1, "%d", nCidades);
@@ -439,7 +439,7 @@ void criaViagem()
 	auxV->cidades = NULL;
 	for(i = 0; i < nCidades; i++)
 	{
-		printf("Cidade numero %d: ", i + 1);
+		printf("\nCidade numero %d: ", i + 1);
 		scanf("%s", cidade);
 		fflush(stdin);
 		fprintf(F1, ";%s", cidade);
@@ -1001,7 +1001,7 @@ void consultaInformacao()
 void consultaPercentagens()
 {
 	struct Ano *corrente;
-	
+	printf("\nVALORES PERCENTUAIS ARREDONDADOS AS UNIDADES\n");
 	printf("\nValor percentual do numero de paises visitados por ano: \n");
 	for(corrente = calendario->seg; corrente != NULL; corrente = corrente->seg)
 	{
@@ -1252,6 +1252,7 @@ void menu()
 		printf("||      6 - Sair                                ||\n");
 		printf("||                                              ||\n");
 		printf("||||||||||||||||||||||||||||||||||||||||||||||||||\n");
+		printf("OPCAO:");
 		scanf("%d", &o);
 		switch(o)
 		{
