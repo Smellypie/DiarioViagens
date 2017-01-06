@@ -1,0 +1,2 @@
+1;2;2013;20;2;300;200;Portugal;1;Aveiro
+2;6;2014;20;1;100;40;Portugal;3;Aveiro;Coimbra;Fatima
