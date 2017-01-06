@@ -382,7 +382,7 @@ void criaViagem()
 	
 	F1=fopen("DiarioViagens.txt","a");									//acrecenta no fim do ficheiro
 	
-	do
+	do 																	//procede à leitura dos dados necessários para introduzir em auxV
 	{
 		printf("Dia de inicio da viagem(dd mm aaaa): \n");
 		scanf("%d%d%d", &dia, &mes, &ano);
@@ -455,7 +455,7 @@ void criaViagem()
 	
 	auxV -> seg = NULL;
 	actualizaDados(auxA, auxV);
-	insereViagem(auxA, auxV);
+	insereViagem(auxA, auxV);											//insere auxV na lista das viagens
 }
 
 void leFicheiro(FILE *F1, long int pos)
@@ -478,7 +478,7 @@ void leFicheiro(FILE *F1, long int pos)
 		info = malloc(50 * sizeof(char));
 		
 		i = 0;
-		while(c != ';')
+		while(c != ';')													//procede à leitura de uma linha do ficheiro
 		{
 			*(info + i) = c;
 			c = fgetc(F1);
@@ -598,7 +598,7 @@ void leFicheiro(FILE *F1, long int pos)
 			nCidades = atoi(info);
 			auxV->nCidades = nCidades;
 			
-			auxV->cidades = NULL;		
+			auxV->cidades = NULL;										//le nomes de cidades e insere na lista das cidades
 			insereCidade(auxV, NULL);
 			i = 0;
 			c = fgetc(F1);
@@ -631,9 +631,9 @@ void leFicheiro(FILE *F1, long int pos)
 			}
 			auxV->seg = NULL;
 			actualizaDados(auxA, auxV);
-			insereViagem(auxA, auxV);
+			insereViagem(auxA, auxV);									//insere a viagem lida na lista
 			pos = ftell(F1);
-			leFicheiro(F1, pos);
+			leFicheiro(F1, pos);										//lê recursivamente a próxima linha do ficheiro
 		}
 	}
 }
@@ -642,7 +642,7 @@ void carregaFicheiro()
 {
 	FILE *F1;
 	long int pos = 0;
-	if(fopen("DiarioViagens.txt", "r") == NULL)
+	if(fopen("DiarioViagens.txt", "r") == NULL)							//se nao encontrar ficheiro com o nome "DiarioViagens.txt", cria um vazio
 	{
 		F1 = fopen("DiarioViagens.txt", "w");
 		printf("Como nao foi encontrado nenhum ficheiro com o nome \"DiarioViagens.txt\",\nfoi criado um vazio\n");
@@ -1094,7 +1094,8 @@ void freeViagem(struct Viagem *viagem)
 	free(viagem);
 }
 
-void criaRelatorioE(int o){ //atençao a ordem alfabetica
+void criaRelatorioE(int o)
+{
 	struct Ano *auxA;
 	struct Viagem *auxV;
 	struct Viagem *auxV2;
@@ -1109,8 +1110,7 @@ void criaRelatorioE(int o){ //atençao a ordem alfabetica
 	int *indices;
 	int  i, j, jaexiste, contador;
 	float a, b, c;
-	a=0;
-	b=0;
+	
 	a = 0;
 	b = 0;
 	c = 0;
@@ -1133,7 +1133,7 @@ void criaRelatorioE(int o){ //atençao a ordem alfabetica
 	{
 		for(auxV = auxA -> viagens; auxV != NULL; auxV = auxV -> seg)				//viagem a viagem
 		{
-			if(!jaExiste(paises, indices, auxV->destinoP, i))						//"matriz" do luis
+			if(!jaExiste(paises, indices, auxV->destinoP, i))						//ver nota no fim desta função
 			{
 				memcpy(paises + j, auxV->destinoP, strlen(auxV->destinoP));
 				j += strlen(auxV->destinoP);
@@ -1288,6 +1288,12 @@ void criaRelatorioE(int o){ //atençao a ordem alfabetica
 	
 	}
 
+/*
+ * Em várias funções deste programa é usada uma "matriz" de caractéres que consiste
+ * em uma string onde são introduzidos nomes seguidos de '\0' e um vector de inteiros onde se guardam os índices da string
+ * onde começam os nomes
+ */
+ 
 void menu()
 {
 	int o, s = 1;
