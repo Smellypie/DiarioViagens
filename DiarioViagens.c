@@ -205,10 +205,6 @@ void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os va
 	{
 		calendario->kmCarro += viagem->kmPercorridos;
 	}
-	if(viagem->meioT == 3)
-	{
-		calendario->kmComboio += viagem->kmPercorridos;
-	}
 	calendario->diasViagem += viagem->duracao;
 }
 
@@ -660,6 +656,7 @@ int percentagem(int a, int b)
 	int res;
 	if(b == 0)
 	{ //se "a" ou "b" forem iguais a zero
+		printf("PORQUE\n");
 		return -1;
 	}
 	else
@@ -1039,7 +1036,6 @@ void consultaPercentagens()
 	printf("\nValor percentual dos dias de viagem por ano:\n");
 	imprimeDiasViagemAnoPercentagem(calendario->diasViagem);
 }
-
 /*
 void criaRelatorioe(){ //atençao a ordem alfabetica
 
@@ -1125,7 +1121,6 @@ int main()
 {
 	criaCalendario();
 	carregaFicheiro();
-	//printf("%d\n", calendario->seg->kmCarro);
 	menu();
 	return 0;
 }
