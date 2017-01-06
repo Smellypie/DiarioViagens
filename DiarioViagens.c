@@ -205,6 +205,10 @@ void actualizaDados(struct Ano *ano, struct Viagem *viagem)				//actualiza os va
 	{
 		calendario->kmCarro += viagem->kmPercorridos;
 	}
+	if(viagem->meioT == 3)
+	{
+		calendario->kmComboio += viagem->kmPercorridos;
+	}
 	calendario->diasViagem += viagem->duracao;
 }
 
@@ -217,6 +221,7 @@ void adicionaAno(int ano)												//Cria a struct de um novo ano
 	novo->nDestinos = 0;
 	novo->kmAviao = 0;
 	novo->kmCarro = 0;
+	novo->kmComboio = 0;
 	novo->diasViagem = 0;
 	novo->ano = ano;
 	novo->seg = NULL;
@@ -625,7 +630,6 @@ void leFicheiro(FILE *F1, long int pos)
 				memmove(auxC->cidade, info, strlen(info) + 1);
 			}
 			auxV->seg = NULL;
-			auxA->viagens = NULL;
 			actualizaDados(auxA, auxV);
 			insereViagem(auxA, auxV);
 			pos = ftell(F1);
@@ -1001,39 +1005,41 @@ void consultaPercentagens()
 {
 	struct Ano *corrente;
 	
-	printf("Valor percentual do numero de paises visitados por ano: \n" );
+	printf("\nValor percentual do numero de paises visitados por ano: \n");
 	for(corrente = calendario->seg; corrente != NULL; corrente = corrente->seg)
 	{
-		printf("%d: %d%%\n ", corrente->ano, percentagem(contaPaisesAno(corrente), contaPaises(0)));
+		printf("%d: %d%%\n", corrente->ano, percentagem(contaPaisesAno(corrente), contaPaises(0)));
 	}
 
-	printf("Valor percentual de cidades visitados por ano:\n");
-	for(corrente = calendario; corrente != NULL; corrente = corrente->seg)
+	printf("\nValor percentual de cidades visitados por ano:\n");
+	for(corrente = calendario->seg; corrente != NULL; corrente = corrente->seg)
 	{
-		printf("%d: %d%%\n ",corrente->ano, percentagem(contaCidadesAno(corrente), contaCidades(0)));
+		printf("%d: %d%%\n",corrente->ano, percentagem(contaCidadesAno(corrente), contaCidades(0)));
 	}
 
-	printf("Valor percentual de quilómetros percorridos por ano:\n");
-	for(corrente = calendario; corrente != NULL; corrente = corrente->seg)
+	printf("\nValor percentual de quilometros percorridos por ano:\n");
+	for(corrente = calendario->seg; corrente != NULL; corrente = corrente->seg)
 	{
-		printf("%d: %d%%\n ", corrente->ano, percentagem(corrente->kmCarro + corrente->kmAviao, calendario->kmAviao + calendario->kmCarro));
+		printf("%d: %d%%\n", corrente->ano, percentagem(corrente->kmCarro + corrente->kmAviao + corrente->kmComboio, calendario->kmAviao + calendario->kmCarro + calendario->kmComboio));
 	}
 	
-	printf("Valor percentual de quilómetros percorridos de Aviao: %d\n", percentagem(corrente->kmAviao, calendario->kmAviao));
-	printf("Valor percentual de quilómetros percorridos de Carro: %d\n", percentagem(corrente->kmCarro, calendario->kmCarro));
+	printf("\nValor percentual de quilometros percorridos de Aviao: %d%%\n", percentagem(calendario->kmAviao, calendario->kmAviao + calendario->kmCarro + calendario->kmComboio));
+	printf("Valor percentual de quilometros percorridos de Carro: %d%%\n", percentagem(calendario->kmCarro, calendario->kmAviao + calendario->kmCarro + calendario->kmComboio));
+	printf("Valor percentual de quilometros percorridos de Comboio: %d%%\n", percentagem(calendario->kmComboio, calendario->kmAviao + calendario->kmCarro + calendario->kmComboio));
 	
-	printf("Valor percentual de despesas por viagem :\n");
+	printf("\nValor percentual de despesas por viagem :\n");
 	despesaViagemPercentagem(calendario->despesa);		//pega no k, faz a percentagem gasta em cada uma das viagens em relação a k e imprime no terminal
 
-	printf("Valor percentual de despesas por ano :\n");
+	printf("\nValor percentual de despesas por ano :\n");
 	despesaAnoPercentagem(calendario->despesa);
 	
-	printf("Valor percentual da duracao de cada viagem:\n");
+	printf("\nValor percentual da duracao de cada viagem:\n");
 	imprimeDiasViagemPercentagem(calendario->diasViagem);
 
-	printf("Valor percentual dos dias de viagem por ano:\n");
+	printf("\nValor percentual dos dias de viagem por ano:\n");
 	imprimeDiasViagemAnoPercentagem(calendario->diasViagem);
 }
+
 /*
 void criaRelatorioe(){ //atençao a ordem alfabetica
 
